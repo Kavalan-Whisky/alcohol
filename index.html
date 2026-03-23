@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Taiwan whisky releases, shops, and updates">
+    <meta name="theme-color" content="#1a1a1a">
+    <title>Taiwan Whisky Hub - Releases & Updates</title>
+    <style>
+        :root {
+            --primary-color: #d4af37; /* Amber/Gold */
+            --bg-dark: #1a1a1a;
+            --bg-light: #2c2c2c;
+            --text-main: #f4f4f4;
+            --text-muted: #aaaaaa;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        header {
+            background-color: #111;
+            padding: 40px 0;
+            text-align: center;
+            border-bottom: 3px solid var(--primary-color);
+        }
+        header h1 {
+            margin: 0;
+            color: var(--primary-color);
+            letter-spacing: 2px;
+            font-size: 2.5em;
+        }
+        header p {
+            color: var(--text-muted);
+            font-size: 1.1em;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+            gap: 40px;
+        }
+        main {
+            flex: 3;
+            min-width: 0; 
+        }
+        aside {
+            flex: 1;
+            min-width: 0; 
+            background-color: var(--bg-light);
+            padding: 25px;
+            border-radius: 8px;
+            height: fit-content;
+        }
+        
+        /* --- Sidebar Headings --- */
+        .sidebar-title {
+            margin-top: 0;
+            color: #fff;
+        }
+        .sidebar-subtitle {
+            font-size: 0.9em;
+            color: #aaa;
+            margin-bottom: 15px;
+        }
+
+        /* --- Search & Filter UI --- */
+        .search-container {
+            margin: 10px 0 20px 0;
+        }
+        .search-input {
+            width: 100%;
+            box-sizing: border-box; 
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid #444;
+            background-color: #111;
+            color: #fff;
+            font-size: 0.95em;
+            margin-bottom: 12px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            font-family: inherit;
+        }
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2);
+        }
+        .filter-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .filter-btn {
+            padding: 6px 12px;
+            border: 1px solid #444;
+            background: #1a1a1a;
+            color: #aaa;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.85em;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+        .filter-btn:hover {
+            background: #333;
+            color: #fff;
+        }
+        .filter-btn.active {
+            background: var(--primary-color);
+            color: #000;
+            border-color: var(--primary-color);
+            font-weight: bold;
+        }
+        .no-results {
+            display: none;
+            color: #aaa;
+            font-size: 0.9em;
+            margin-top: 15px;
+            text-align: center;
+            padding: 15px;
+            background: #111;
+            border-radius: 6px;
+            border: 1px dashed #444;
+        }
+        
+        /* --- Highlight Marker --- */
+        mark {
+            background-color: var(--primary-color);
+            color: #000;
+            padding: 0 2px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+
+        .release-card {
+            background-color: var(--bg-light);
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border-left: 5px solid var(--primary-color);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .release-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(212, 175, 55, 0.15);
+        }
+        .release-card h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+            font-size: 1.4em;
+        }
+        .date {
+            font-size: 0.85em;
+            color: var(--text-muted);
+            margin-bottom: 15px;
+            display: block;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .shop-list {
+            list-style: none;
+            padding: 0 10px 0 0;
+            margin: 0;
+            max-height: 800px;
+            overflow-y: auto;
+        }
+        .shop-list::-webkit-scrollbar {
+            width: 6px;
+        }
+        .shop-list::-webkit-scrollbar-thumb {
+            background-color: var(--primary-color);
+            border-radius: 4px;
+        }
+        .shop-list::-webkit-scrollbar-track {
+            background-color: #111;
+        }
+        .shop-list li {
+            margin-bottom: 20px;
+            border-bottom: 1px solid #444;
+            padding-bottom: 15px;
+        }
+        .shop-list li:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        .shop-list .shop-title {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 1.1em;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 8px;
+            transition: color 0.2s;
+        }
+        .shop-list .shop-title:hover {
+            color: #fff;
+        }
+        .shop-desc {
+            font-size: 0.85em;
+            color: var(--text-muted);
+            display: block;
+            line-height: 1.5;
+        }
+        .shop-desc span {
+            display: block;
+            margin-bottom: 3px;
+        }
+
+        /* --- Map Link CSS --- */
+        .map-link {
+            color: inherit;
+            text-decoration: none;
+            border-bottom: 1px dashed #666;
+            transition: color 0.2s, border-color 0.2s;
+            display: inline-block;
+        }
+        .map-link:hover {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+
+        /* --- Expandable Accordion CSS --- */
+        details.branch-dropdown {
+            margin-top: 10px;
+            background-color: #1a1a1a;
+            border: 1px solid #444;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        details.branch-dropdown summary {
+            cursor: pointer;
+            padding: 10px;
+            font-weight: bold;
+            color: var(--primary-color);
+            background-color: #222;
+            font-size: 0.9em;
+            transition: background-color 0.2s;
+        }
+        details.branch-dropdown summary:hover {
+            background-color: #333;
+            color: #fff;
+        }
+        details.branch-dropdown summary:focus {
+            outline: 2px solid var(--primary-color);
+            outline-offset: -2px;
+        }
+        .branch-content {
+            padding: 10px;
+            font-size: 0.85em;
+            color: var(--text-muted);
+            background-color: #1a1a1a;
+            line-height: 1.7;
+        }
+        .branch-item {
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed #333;
+        }
+        .branch-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        .branch-item strong {
+            color: #fff;
+            display: block;
+            margin-bottom: 4px;
+        }
+        .store-link {
+            color: var(--primary-color);
+            text-decoration: underline;
+            font-weight: bold;
+            transition: color 0.2s;
+            display: inline-block;
+            margin-top: 5px;
+        }
+        .store-link:hover {
+            color: #fff;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+            background-color: #111;
+            color: var(--text-muted);
+            border-top: 1px solid #333;
+            font-size: 0.9em;
+        }
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>🥃 TAIWAN WHISKY HUB</h1>
+    <p>The Latest Releases, Cask Updates & Where to Buy</p>
+</header>
+
+<div class="container">
+    <main>
+        <h2>Latest Whisky Releases</h2>
+        <div id="news-feed">
+            <div class="release-card">
+                <h3>Kavalan Solist Vinho Barrique - New Allocation</h3>
+                <span class="date">Just Announced</span>
+                <p>Kavalan has released a new limited batch of their award-winning Solist Vinho Barrique series to local retailers. Matured in heavily toasted wine casks, expect rich notes of dark chocolate, pepper, and ripe melon.</p>
+            </div>
+            <div class="release-card">
+                <h3>OMAR Cask Strength Plum Liqueur Barrel</h3>
+                <span class="date">Recent Drop</span>
+                <p>Nantou Distillery's highly anticipated single malt finished in plum liqueur barrels is hitting shelves. It offers a beautiful balance of traditional malt backbone with sweet, tart plum notes native to Taiwan.</p>
+            </div>
+            <div class="release-card">
+                <h3>Springbank 15 Year Old Restock</h3>
+                <span class="date">Trending Now</span>
+                <p>Several major independent retailers in Taipei and Taichung have reported small restocks of Springbank 15. Due to high demand, these are strictly limited to one bottle per customer.</p>
+            </div>
+        </div>
+    </main>
+
+    <aside>
+        <h2 class="sidebar-title">Taiwan Whisky Shops</h2>
+        <p class="sidebar-subtitle">Retailers, addresses, and hours:</p>
+        
+        <div class="search-container">
+            <input 
+                type="text" 
+                id="shop-search" 
+                class="search-input"
+                placeholder="Search shops or locations..." 
+            >
+            <div id="filters" class="filter-group">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="taipei">Taipei</button>
+                <button class="filter-btn" data-filter="taichung">Taichung</button>
+                <button class="filter-btn" data-filter="kaohsiung">Kaohsiung</button>
+            </div>
+            <p id="no-results" class="no-results">
+                No matching shops found. Try a different keyword!
+            </p>
+        </div>
+        
+        <ul class="shop-list">
+            <li>
+                <a href="https://www.609.com.tw/" target="_blank" rel="noopener noreferrer" class="shop-title">Jiu Tiao Tong (酒條通)</a>
+                <div class="shop-desc">
+                    <span>📍 40+ Branches Island-wide</span>
+                    <span>⏰ 11:00 AM - 10:00 PM (Most stores)</span>
+                </div>
+                <details class="branch-dropdown">
+                    <summary>📍 View Addresses (查看門市)</summary>
+                    <div class="branch-content">
+                        <div class="branch-item">
+                            <strong>南京建國概念店 (Nanjing Flagship)</strong>
+                            <a href="https://www.google.com/maps/search/?api=1&query=台北市中山區南京東路三段91-1號1樓" target="_blank" rel="noopener noreferrer" class="map-link">
+                                台北市中山區南京東路三段91-1號1樓<br>
+                                1F, No. 91-1, Sec. 3, Nanjing E. Rd., Zhongshan Dist.
+                            </a>
+                        </div>
+                        <div class="branch-item">
+                            <strong>長安店 (Chang'an Branch)</strong>
+                            <a href="https://www.google.com/maps/search/?api=1&query=台北市中山區長安東路一段79-1號" target="_blank" rel="noopener noreferrer" class="map-link">
+                                台北市中山區長安東路一段79-1號<br>
+                                No. 79-1, Sec. 1, Chang'an E. Rd., Zhongshan Dist.
+                            </a>
+                        </div>
+                        <div class="branch-item">
+                            <strong>南京復興店 (Nanjing Fuxing Branch)</strong>
+                            <a href="https://www.google.com/maps/search/?api=1&query=台北市中山區復興北路90號" target="_blank" rel="noopener noreferrer" class="map-link">
+                                台北市中山區復興北路90號<br>
+                                No. 90, Fuxing N. Rd., Zhongshan Dist.
+                            </a>
+                        </div>
+                        <div class="branch-item">
+                            <a href="https://www.609.com.tw/Branches/Branch100" target="_blank" rel="noopener noreferrer" class="store-link">➔ View all 40+ locations</a>
+                        </div>
+                    </div>
+                </details>
+            </li>
+
+            <li>
+                <a href="https://www.drinks.com.tw/" target="_blank" rel="noopener noreferrer" class="shop-title">Drinks (橡木桶洋酒)</a>
+                <div class="shop-desc">
+                    <span>📍 30+ Branches Island-wide</span>
+                </div>
+                <details class="branch-dropdown">
+                    <summary>📍 View Addresses (查看門市)</summary>
+                    <div class="branch-content">
+                        <div class="branch-item">
+                            <strong>松江總店 (Songjiang Headquarters)</strong>
+                            <a href="https://www.google.com/maps/search/?api=1&query=台北市中山區松江路190號" target="_blank" rel="noopener noreferrer" class="map-link">
+                                台北市中山區松江路190號<br>
+                                No. 190, Songjiang Rd., Zhongshan Dist., Taipei City
+                            </a>
+                        </div>
+                        <div class="branch-item">
+                            <strong>天母推廣中心 (Tianmu Branch)</strong>
+                            <a href="https://www.google.com/maps/search/?api=1&query=台北市士林區忠誠路一段138號" target="_blank" rel="noopener noreferrer" class="map-link">
+                                台北市士林區忠誠路一段138號<br>
+                                No. 138, Sec. 1, Zhongcheng Rd., Shilin Dist., Taipei City
+                            </a>
+                        </div>
+                        <div class="branch-item">
+                            <strong>高雄建國推廣中心 (Kaohsiung Jianguo Branch)</strong>
+                            <a href="https://www.google.com/maps/search/?api=1&query=高雄市苓雅區建國一路175號" target="_blank" rel="noopener noreferrer" class="map-link">
+                                高雄市苓雅區建國一路175號<br>
+                                No. 175, Jianguo 1st Rd., Lingya Dist., Kaohsiung City
+                            </a>
+                        </div>
+                        <div class="branch-item">
+                            <a href="https://www.drinks.com.tw/location.html" target="_blank" rel="noopener noreferrer" class="store-link">➔ View all 30+ locations</a>
+                        </div>
+                    </div>
+                </details>
+            </li>
+
+            <li>
+                <a href="https://麥卡倫.com/" target="_blank" rel="noopener noreferrer" class="shop-title">Yinpan Liquor (銀盤菸酒)</a>
+                <div class="shop-desc">
+                    <span>📍 3 Branches in Taiwan (Taipei, Taichung, Kaohsiung)</span>
+                    <span>⏰ Mon-Sat: 1:00 PM - 11:45 PM (Closed Sun)</span>
+                </div>
+                <details class="branch-dropdown">
+                    <summary>📍 View Addresses (查看門市)</summary>
+                    <div class="branch-content">
+                        <div class="branch-item">
+                            <strong>台北合江店 (Taipei Hejiang Branch)</strong>
+                            <a href="https://www.google.com/maps/search/?api=1&query=台北市中山區合江街188巷26號" target="_blank" rel="noopener noreferrer" class="map-link">
+                                台北市中山區合江街188巷26號<br>
+                                No. 26, Ln. 188, Hejiang St., Zhongshan Dist.
+                            </a>
+                        </div>
+                        <div class="branch-item">
+                            <strong>台中店 (Taichung Branch)</strong>
+                            <a href="https://www.google.com/maps/search/?api=1&query=台中市北區陝西路58號1樓" target="_blank" rel="noopener noreferrer" class="map-link">
+                                台中市北區陝西路58號1樓<br>
+                                1F, No. 58, Shaanxi Rd., North Dist., Taichung City
+                            </a>
+                        </div>
+                        <div class="branch-item">
+                            <strong>高雄店 (Kaohsiung Branch)</strong>
+                            <a href="https://www.google.com/maps/search/?api=1&query=高雄市苓雅區建民路158號" target="_blank" rel="noopener noreferrer" class="map-link">
+                                高雄市苓雅區建民路158號<br>
+                                No. 158, Jianmin Rd., Lingya Dist., Kaohsiung City
+                            </a>
+                        </div>
+                    </div>
+                </details>
+            </li>
+
+            <li>
+                <a href="https://www.andwhisky.com.tw/" target="_blank" rel="noopener noreferrer" class="shop-title">And Whisky (安德威洋酒)</a>
+                <div class="shop-desc">
+                    <span>📍 
+                        <a href="https://www.google.com/maps/search/?api=1&query=台北市內湖區港墘路73號" target="_blank" rel="noopener noreferrer" class="map-link">
+                            台北市內湖區港墘路73號<br>
+                            No. 73, Gangqian Rd., Neihu Dist., Taipei City
+                        </a>
+                    </span>
+                    <span>⏰ Mon-Sun: 11:00 AM - 9:00 PM</span>
+                </div>
+            </li>
+
+            <li>
+                <a href="https://www.hengjo.com.tw/" target="_blank" rel="noopener noreferrer" class="shop-title">Hengjo (亨玖酒業)</a>
+                <div class="shop-desc">
+                    <span>📍 2 Branches in Taipei Area</span>
+                    <span>⏰ Mon-Sun: 10:00 AM - 10:00 PM</span>
+                </div>
+                <details class="branch-dropdown">
+                    <summary>📍 View Addresses (查看門市)</summary>
+                    <div class="branch-content">
+                        <div class="branch-item">
+                            <strong>總店 (Headquarters / Jingmei)</strong>
+                            <a href="https://www.google.com/maps/search/?api=1&query=台北市文山區景福街204號" target="_blank" rel="noopener noreferrer" class="map-link">
+                                台北市文山區景福街204號<br>
+                                No. 204, Jingfu St., Wenshan Dist., Taipei City
+                            </a>
+                        </div>
+                        <div class="branch-item">
+                            <strong>復興店 (Fuxing Branch)</strong>
+                            <a href="https://www.google.com/maps/search/?api=1&query=台北市中山區復興南路一段38號1樓" target="_blank" rel="noopener noreferrer" class="map-link">
+                                台北市中山區復興南路一段38號1樓<br>
+                                1F, No. 38, Sec. 1, Fuxing S. Rd., Zhongshan Dist.
+                            </a>
+                        </div>
+                    </div>
+                </details>
+            </li>
+
+            <li>
+                <a href="https://www.alotofspirits.com/" target="_blank" rel="noopener noreferrer" class="shop-title">A Lot of Spirits (酒多多)</a>
+                <div class="shop-desc">
+                    <span>📍 
+                        <a href="https://www.google.com/maps/search/?api=1&query=台北市大同區重慶北路一段128號" target="_blank" rel="noopener noreferrer" class="map-link">
+                            台北市大同區重慶北路一段128號<br>
+                            No. 128, Sec. 1, Chongqing N. Rd., Datong Dist., Taipei City
+                        </a>
+                    </span>
+                    <span>⏰ Mon-Sat: 10:30 AM - 9:30 PM (Closed Sun)</span>
+                </div>
+            </li>
+
+            <li>
+                <a href="https://www.my9.com.tw/" target="_blank" rel="noopener noreferrer" class="shop-title">MY9 (買酒網)</a>
+                <div class="shop-desc">
+                    <span>📍 10+ Branches in Taipei Area</span>
+                </div>
+                <details class="branch-dropdown">
+                    <summary>📍 View Addresses (查看門市)</summary>
+                    <div class="branch-content">
+                        <div class="branch-item">
+                            <strong>內湖旗艦門市 (Neihu Flagship)</strong>
+                            <a href="https://www.google.com/maps/search/?api=1&query=台北市內湖區行愛路77巷69號1樓" target="_blank" rel="noopener noreferrer" class="map-link">
+                                台北市內湖區行愛路77巷69號1樓<br>
+                                1F, No. 69, Ln. 77, Xing'ai Rd., Neihu Dist.
+                            </a>
+                        </div>
+                        <div class="branch-item">
+                            <strong>敦一門市 (Da'an Dunhua Branch)</strong>
+                            <a href="https://www.google.com/maps/search/?api=1&query=台北市大安區敦化南路一段196號1樓" target="_blank" rel="noopener noreferrer" class="map-link">
+                                台北市大安區敦化南路一段196號1樓<br>
+                                1F, No. 196, Sec. 1, Dunhua S. Rd., Da'an Dist.
+                            </a>
+                        </div>
+                        <div class="branch-item">
+                            <a href="https://www.my9.com.tw/" target="_blank" rel="noopener noreferrer" class="store-link">➔ View all store locations</a>
+                        </div>
+                    </div>
+                </details>
+            </li>
+
+            <li>
+                <a href="https://www.9hunters.com/" target="_blank" rel="noopener noreferrer" class="shop-title">9.hunters (獵酒人)</a>
+                <div class="shop-desc">
+                    <span>📍 
+                        <a href="https://www.google.com/maps/search/?api=1&query=新北市三重區環河南路221巷8號" target="_blank" rel="noopener noreferrer" class="map-link">
+                            新北市三重區環河南路221巷8號<br>
+                            No. 8, Ln. 221, Huanhe N. Rd., Sanchong Dist., New Taipei City
+                        </a>
+                    </span>
+                    <span>⏰ Mon-Sat: 12:00 PM - 9:00 PM (Closed Sun)</span>
+                </div>
+            </li>
+
+            <li>
+                <a href="https://www.alcohol.com.tw/" target="_blank" rel="noopener noreferrer" class="shop-title">Cathay Liquor (國泰洋酒)</a>
+                <div class="shop-desc">
+                    <span>📍 2 Major Branches in Taichung</span>
+                    <span>⏰ Mon-Sat: 10:00 AM - 10:00 PM</span>
+                </div>
+                <details class="branch-dropdown">
+                    <summary>📍 View Addresses (查看門市)</summary>
+                    <div class="branch-content">
+                        <div class="branch-item">
+                            <strong>五權旗艦店 (Wuquan Flagship)</strong>
+                            <a href="https://www.google.com/maps/search/?api=1&query=台中市北區五權路235號" target="_blank" rel="noopener noreferrer" class="map-link">
+                                台中市北區五權路235號<br>
+                                No. 235, Wuquan Rd., North Dist., Taichung City
+                            </a>
+                        </div>
+                        <div class="branch-item">
+                            <strong>文心千勝店 (Qiansheng Branch)</strong>
+                            <a href="https://www.google.com/maps/search/?api=1&query=台中市西屯區文心路三段159號" target="_blank" rel="noopener noreferrer" class="map-link">
+                                台中市西屯區文心路三段159號<br>
+                                No. 159, Sec. 3, Wenxin Rd., Xitun Dist., Taichung City
+                            </a>
+                        </div>
+                    </div>
+                </details>
+            </li>
+
+            <li>
+                <a href="https://www.whisky.com.tw/" target="_blank" rel="noopener noreferrer" class="shop-title">Haomai (豪邁國際)</a>
+                <div class="shop-desc">
+                    <span>📍 
+                        <a href="https://www.google.com/maps/search/?api=1&query=台北市大安區樂利路63號1樓" target="_blank" rel="noopener noreferrer" class="map-link">
+                            台北市大安區樂利路63號1樓<br>
+                            1F, No. 63, Leli Rd., Da'an Dist., Taipei City
+                        </a>
+                    </span>
+                    <span>⏰ Mon-Sat: 12:00 PM - 9:00 PM (Closed Sun)</span>
+                </div>
+            </li>
+        </ul>
+    </aside>
+</div>
+
+<footer>
+    <p>© 2026 Taiwan Whisky Hub. Please drink responsibly.</p>
+</footer>
+
+<script>
+    const searchInput = document.getElementById('shop-search');
+    const shopItems = document.querySelectorAll('.shop-list li');
+    const buttons = document.querySelectorAll('.filter-btn');
+    const noResults = document.getElementById('no-results');
+
+    let activeFilter = 'all';
+
+    // 👉 City Matcher (Handles both English and Chinese)
+    function matchCity(text, filter) {
+        if (filter === 'all') return true;
+        if (filter === 'taipei') return text.includes('台北') || text.includes('taipei') || text.includes('新北');
+        if (filter === 'taichung') return text.includes('台中') || text.includes('taichung');
+        if (filter === 'kaohsiung') return text.includes('高雄') || text.includes('kaohsiung');
+        return true;
+    }
+
+    // 👉 Safe Highlighter: Ignores text inside HTML tags
+    function highlightSafe(html, keyword) {
+        if (!keyword) return html;
+        const safeKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const regex = new RegExp(`(?![^<]*>)(${safeKeyword})`, 'gi');
+        return html.replace(regex, '<mark>$1</mark>');
+    }
+
+    function updateList() {
+        const keyword = searchInput.value.toLowerCase().trim();
+        let visibleCount = 0;
+
+        shopItems.forEach(item => {
+            const rawText = item.textContent.toLowerCase();
+            const matchKeyword = keyword === '' || rawText.includes(keyword);
+            const matchLocation = matchCity(rawText, activeFilter);
+
+            if (matchKeyword && matchLocation) {
+                item.style.display = '';
+                visibleCount++;
+
+                const details = item.querySelector('details');
+                if (details) {
+                    if (keyword !== '' && details.textContent.toLowerCase().includes(keyword)) {
+                        details.setAttribute('open', ''); 
+                    } else if (keyword === '') {
+                        details.removeAttribute('open'); 
+                    }
+                }
+
+                const elementsToHighlight = item.querySelectorAll('.map-link, .shop-title, .branch-item strong');
+                
+                elementsToHighlight.forEach(el => {
+                    if (el.dataset.original === undefined) {
+                        el.dataset.original = el.innerHTML;
+                    }
+                    
+                    if (keyword) {
+                        el.innerHTML = highlightSafe(el.dataset.original, keyword);
+                    } else {
+                        el.innerHTML = el.dataset.original;
+                    }
+                });
+
+            } else {
+                item.style.display = 'none';
+            }
+        });
+
+        noResults.style.display = visibleCount === 0 ? 'block' : 'none';
+    }
+
+    // 👉 Event Listeners
+    searchInput.addEventListener('input', updateList);
+
+    buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            buttons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            activeFilter = btn.dataset.filter;
+            updateList();
+        });
+    });
+</script>
+</body>
+</html>
