@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Whisky shops in Taiwan">
     <meta name="theme-color" content="#1a1a1a">
-    <title>Fly's Whisky Hub - Stores & Updates</title>
+    <title>Fly's Whisky Hub - Stores & Bottles</title>
     <style>
         :root {
             --primary-color: #d4af37; /* Amber/Gold */
@@ -70,6 +70,130 @@
             margin-bottom: 15px;
         }
 
+        /* --- Distillery Boxes (Main Content) --- */
+        .distillery-box {
+            background-color: var(--bg-light);
+            padding: 25px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            border-top: 5px solid var(--primary-color);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        .distillery-box h2 {
+            margin-top: 0;
+            color: var(--primary-color);
+            font-size: 1.8em;
+            border-bottom: 1px dashed #555;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .distillery-box h3 {
+            color: #fff;
+            font-size: 1.2em;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            background-color: #111;
+            padding: 8px 15px;
+            border-radius: 4px;
+            border-left: 3px solid var(--primary-color);
+        }
+        
+        /* --- Distillery Controls --- */
+        .distillery-controls {
+            background: #222;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border: 1px solid #444;
+        }
+        .distillery-controls .control-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .control-select {
+            padding: 8px 12px;
+            background-color: #111;
+            color: #fff;
+            border: 1px solid #444;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 0.9em;
+            cursor: pointer;
+            outline: none;
+            flex: 1;
+            min-width: 150px;
+        }
+        .control-select:focus {
+            border-color: var(--primary-color);
+        }
+
+        /* Scrollable List Area */
+        .scroll-list {
+            list-style: none;
+            padding: 0 10px 0 0;
+            margin: 0;
+            max-height: 250px; 
+            overflow-y: auto;
+        }
+        .scroll-list::-webkit-scrollbar {
+            width: 6px;
+        }
+        .scroll-list::-webkit-scrollbar-thumb {
+            background-color: #555;
+            border-radius: 4px;
+        }
+        .scroll-list::-webkit-scrollbar-thumb:hover {
+            background-color: var(--primary-color);
+        }
+        .scroll-list::-webkit-scrollbar-track {
+            background-color: #1a1a1a;
+        }
+        .scroll-list li {
+            padding: 8px 10px;
+            border-bottom: 1px solid #333;
+            font-size: 0.95em;
+            display: flex;
+            justify-content: space-between;
+            transition: background 0.2s;
+        }
+        .scroll-list li:hover {
+            background-color: #333;
+        }
+        .scroll-list li:last-child {
+            border-bottom: none;
+        }
+        .scroll-list li strong {
+            color: var(--primary-color);
+        }
+        .scroll-list li span.year {
+            color: #aaa;
+            font-family: monospace;
+            font-size: 0.9em;
+            white-space: nowrap;
+        }
+
+        /* --- Distillery Links & Icons --- */
+        .distillery-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .distillery-link:hover {
+            color: #fff;
+            text-decoration: underline;
+        }
+        .map-icon {
+            text-decoration: none;
+            margin: 0 4px;
+            display: inline-block;
+            transition: transform 0.2s;
+            font-size: 1.05em;
+        }
+        .map-icon:hover {
+            transform: scale(1.3);
+        }
+
         /* --- Search & Filter UI --- */
         .search-container {
             margin: 10px 0 20px 0;
@@ -130,7 +254,6 @@
             border: 1px dashed #444;
         }
         
-        /* --- Highlight Marker --- */
         mark {
             background-color: var(--primary-color);
             color: #000;
@@ -139,32 +262,7 @@
             font-weight: bold;
         }
 
-        .release-card {
-            background-color: var(--bg-light);
-            padding: 25px;
-            margin-bottom: 20px;
-            border-radius: 8px;
-            border-left: 5px solid var(--primary-color);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-        .release-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 15px rgba(212, 175, 55, 0.15);
-        }
-        .release-card h3 {
-            margin-top: 0;
-            color: var(--primary-color);
-            margin-bottom: 5px;
-            font-size: 1.4em;
-        }
-        .date {
-            font-size: 0.85em;
-            color: var(--text-muted);
-            margin-bottom: 15px;
-            display: block;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
+        /* --- Sidebar Shop List CSS --- */
         .shop-list {
             list-style: none;
             padding: 0 10px 0 0;
@@ -215,7 +313,6 @@
             margin-bottom: 3px;
         }
 
-        /* --- Map Link CSS --- */
         .map-link {
             color: inherit;
             text-decoration: none;
@@ -228,7 +325,6 @@
             border-bottom-color: var(--primary-color);
         }
 
-        /* --- Expandable Accordion CSS --- */
         details.branch-dropdown {
             margin-top: 10px;
             background-color: #1a1a1a;
@@ -307,29 +403,147 @@
 
 <header>
     <h1>🥃 FLY'S WHISKY HUB</h1>
-    <p>Stores & Updates</p>
+    <p>Stores & Bottles</p>
 </header>
 
 <div class="container">
     <main>
-        <h2>Latest Whisky Releases</h2>
-        <div id="news-feed">
-            <div class="release-card">
-                <h3>Kavalan Solist Vinho Barrique - New Allocation</h3>
-                <span class="date">Just Announced</span>
-                <p>Kavalan has released a new limited batch of their award-winning Solist Vinho Barrique series to local retailers. Matured in heavily toasted wine casks, expect rich notes of dark chocolate, pepper, and ripe melon.</p>
+        
+        <div class="distillery-box">
+            <h2>🏴󠁧󠁢󠁳󠁣󠁴󠁿 Scottish Distilleries</h2>
+            
+            <div class="distillery-controls">
+                <input type="text" id="scot-search" class="search-input" placeholder="Search Scottish distilleries..." style="margin-bottom: 10px;">
+                <div class="control-row">
+                    <select id="scot-region" class="control-select">
+                        <option value="all">All Regions</option>
+                        <option value="Highlands">Highlands</option>
+                        <option value="Speyside">Speyside</option>
+                        <option value="Islay">Islay</option>
+                        <option value="Lowlands">Lowlands</option>
+                        <option value="Campbeltown">Campbeltown</option>
+                        <option value="Islands">Islands</option>
+                    </select>
+                    <select id="scot-sort" class="control-select">
+                        <option value="year-asc">Sort: Est. Year (Oldest First)</option>
+                        <option value="year-desc">Sort: Est. Year (Newest First)</option>
+                        <option value="name-asc">Sort: A-Z (Distillery Name)</option>
+                        <option value="region-asc">Sort: By Region</option>
+                    </select>
+                </div>
+                <p id="scot-no-results" class="no-results">No distilleries found matching your criteria.</p>
             </div>
-            <div class="release-card">
-                <h3>OMAR Cask Strength Plum Liqueur Barrel</h3>
-                <span class="date">Recent Drop</span>
-                <p>Nantou Distillery's highly anticipated single malt finished in plum liqueur barrels is hitting shelves. It offers a beautiful balance of traditional malt backbone with sweet, tart plum notes native to Taiwan.</p>
-            </div>
-            <div class="release-card">
-                <h3>Springbank 15 Year Old Restock</h3>
-                <span class="date">Trending Now</span>
-                <p>Several major independent retailers in Taipei and Taichung have reported small restocks of Springbank 15. Due to high demand, these are strictly limited to one bottle per customer.</p>
-            </div>
+
+            <h3>Active Distilleries</h3>
+            <ul class="scroll-list" id="scot-active-list">
+                <li data-name="Aberlour" data-region="Speyside" data-year="1879"><span><strong><a href="https://www.aberlour.com/" class="distillery-link" target="_blank">Aberlour</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Aberlour+Distillery+Scotland" class="map-icon" target="_blank" title="View on Maps">📍</a> (Speyside)</span> <span class="year">Est. 1879</span></li>
+                <li data-name="Allt-a-Bhainne" data-region="Speyside" data-year="1975"><span><strong><a href="https://www.chivasbrothers.com/" class="distillery-link" target="_blank">Allt-a-Bhainne</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Allt-a-Bhainne+Distillery+Scotland" class="map-icon" target="_blank" title="View on Maps">📍</a> (Speyside)</span> <span class="year">Est. 1975</span></li>
+                <li data-name="Auchroisk" data-region="Speyside" data-year="1974"><span><strong><a href="https://www.malts.com/" class="distillery-link" target="_blank">Auchroisk</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Auchroisk+Distillery+Scotland" class="map-icon" target="_blank" title="View on Maps">📍</a> (Speyside)</span> <span class="year">Est. 1974</span></li>
+                <li data-name="Aultmore" data-region="Speyside" data-year="1897"><span><strong><a href="https://www.dewars.com/gl/en/aultmore/" class="distillery-link" target="_blank">Aultmore</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Aultmore+Distillery+Scotland" class="map-icon" target="_blank" title="View on Maps">📍</a> (Speyside)</span> <span class="year">Est. 1897</span></li>
+                <li data-name="Balmenach" data-region="Speyside" data-year="1824"><span><strong><a href="https://www.inverhouse.com/" class="distillery-link" target="_blank">Balmenach</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Balmenach+Distillery+Scotland" class="map-icon" target="_blank" title="View on Maps">📍</a> (Speyside)</span> <span class="year">Est. 1824</span></li>
+                <li data-name="Benriach" data-region="Speyside" data-year="1898"><span><strong><a href="https://www.benriachdistillery.com/" class="distillery-link" target="_blank">Benriach</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Benriach+Distillery+Scotland" class="map-icon" target="_blank" title="View on Maps">📍</a> (Speyside)</span> <span class="year">Est. 1898</span></li>
+                <li data-name="Benrinnes" data-region="Speyside" data-year="1826"><span><strong><a href="https://www.malts.com/" class="distillery-link" target="_blank">Benrinnes</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Benrinnes+Distillery+Scotland" class="map-icon" target="_blank" title="View on Maps">📍</a> (Speyside)</span> <span class="year">Est. 1826</span></li>
+                <li data-name="Cardhu" data-region="Speyside" data-year="1824"><span><strong><a href="https://www.malts.com/en-gb/distilleries/cardhu" class="distillery-link" target="_blank">Cardhu</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Cardhu+Distillery+Scotland" class="map-icon" target="_blank" title="View on Maps">📍</a> (Speyside)</span> <span class="year">Est. 1824</span></li>
+                <li data-name="Craigellachie" data-region="Speyside" data-year="1891"><span><strong><a href="https://www.dewars.com/gl/en/craigellachie/" class="distillery-link" target="_blank">Craigellachie</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Craigellachie+Distillery+Scotland" class="map-icon" target="_blank" title="View on Maps">📍</a> (Speyside)</span> <span class="year">Est. 1891</span></li>
+                <li data-name="Cragganmore" data-region="Speyside" data-year="1869"><span><strong><a href="https://www.malts.com/en-gb/distilleries/cragganmore" class="distillery-link" target="_blank">Cragganmore</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Cragganmore+Distillery+Scotland" class="map-icon" target="_blank" title="View on Maps">📍</a> (Speyside)</span> <span class="year">Est. 1869</span></li>
+                <li data-name="Dufftown" data-region="Speyside" data-year="1896"><span><strong><a href="https://www.thesingleton.com/" class="distillery-link" target="_blank">Dufftown</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Dufftown+Distillery+Scotland" class="map-icon" target="_blank" title="View on Maps">📍</a> (Speyside)</span> <span class="year">Est. 1896</span></li>
+                <li data-name="Glen Elgin" data-region="Speyside" data-year="1898"><span><strong><a href="https://www.malts.com/" class="distillery-link" target="_blank">Glen Elgin</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Glen+Elgin+Distillery+Scotland" class="map-icon" target="_blank" title="View on Maps">📍</a> (Speyside)</span> <span class="year">Est. 1898</span></li>
+                <li data-name="Glen Grant" data-region="Speyside" data-year="1840"><span><strong><a href="https://www.glengrant.com/" class="distillery-link" target="_blank">Glen Grant</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Glen+Grant+Distillery+Scotland" class="map-icon" target="_blank" title="View on Maps">📍</a> (Speyside)</span> <span class="year">Est. 1840</span></li>
+                <li data-name="Glen Moray" data-region="Speyside" data-year="1897"><span><strong><a href="https://www.glenmoray.com/" class="distillery-link" target="_blank">Glen Moray</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Glen+Moray+Distillery+Scotland" class="map-icon" target="_blank" title="View on Maps">📍</a> (Speyside)</span> <span class="year">Est. 1897</span></li>
+                <li data-name="Glen Spey" data-region="Speyside" data-year="1878"><span><strong><a href="https://www.malts.com/" class="distillery-link" target="_blank">Glen Spey</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Glen+Spey+Distillery+Scotland" class="map-icon" target="_blank" title="View on Maps">📍</a> (Speyside)</span> <span class="year">Est. 1878</span></li>
+                <li data-name="Glenallachie" data-region="Speyside" data-year="1967"><span><strong><a href="https://theglenallachie.com/" class="distillery-link" target="_blank">Glenallachie</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Glenallachie+Distillery+Scotland" class="map-icon" target="_blank" title="View on Maps">📍</a> (Speyside)</span> <span class="year">Est. 1967</span></li>
+                <li data-name="Glenfarclas" data-region="Speyside" data-year="1836"><span><strong><a href="https://glenfarclas.com/" class="distillery-link" target="_blank">Glenfarclas</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Glenfarclas+Distillery+Scotland" class="map-icon" target="_blank" title="View on Maps">📍</a> (Speyside)</span> <span class="year">Est. 1836</span></li>
+                <li data-name="Glenfiddich" data-region="Speyside" data-year="1887"><span><strong><a href="https://www.glenfiddich.com/" class="distillery-link" target="_blank">Glenfiddich</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Glenfiddich+Distillery+Scotland" class="map-icon" target="_blank" title="View on Maps">📍</a> (Speyside)</span> <span class="year">Est. 1887</span></li>
+                <li data-name="Glenlivet" data-region="Speyside" data-year="1824"><span><strong><a href="https://www.theglenlivet.com/" class="distillery-link" target="_blank">Glenlivet</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Glenlivet+Distillery+Scotland" class="map-icon" target="_blank" title="View on Maps">📍</a> (Speyside)</span> <span class="year">Est. 1824</span></li>
+                <li data-name="Macallan" data-region="Speyside" data-year="1824"><span><strong><a href="https://www.themacallan.com/" class="distillery-link" target="_blank">Macallan</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Macallan+Distillery+Scotland" class="map-icon" target="_blank" title="View on Maps">📍</a> (Speyside)</span> <span class="year">Est. 1824</span></li>
+                <li data-name="Mortlach" data-region="Speyside" data-year="1823"><span><strong><a href="https://www.mortlach.com/" class="distillery-link" target="_blank">Mortlach</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Mortlach+Distillery+Scotland" class="map-icon" target="_blank" title="View on Maps">📍</a> (Speyside)</span> <span class="year">Est. 1823</span></li>
+                <li data-name="Speyburn" data-region="Speyside" data-year="1897"><span><strong><a href="https://www.speyburn.com/" class="distillery-link" target="_blank">Speyburn</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Speyburn+Distillery+Scotland" class="map-icon" target="_blank" title="View on Maps">📍</a> (Speyside)</span> <span class="year">Est. 1897</span></li>
+                <li data-name="Strathisla" data-region="Speyside" data-year="1786"><span><strong><a href="https://www.chivasbrothers.com/" class="distillery-link" target="_blank">Strathisla</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Strathisla+Distillery+Scotland" class="map-icon" target="_blank" title="View on Maps">📍</a> (Speyside)</span> <span class="year">Est. 1786</span></li>
+                <li data-name="Ardmore" data-region="Highlands" data-year="1898"><span><strong><a href="https://www.ardmorewhisky.com/" class="distillery-link" target="_blank">Ardmore</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Ardmore+Distillery+Scotland" class="map-icon" target="_blank" title="View on Maps">📍</a> (Highlands)</span> <span class="year">Est. 1898</span></li>
+                <li data-name="Blair Athol" data-region="Highlands" data-year="1798"><span><strong><a href="https://www.malts.com/en-gb/distilleries/blair-athol" class="distillery-link" target="_blank">Blair Athol</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Blair+Athol+Distillery+Scotland" class="map-icon" target="_blank" title="View on Maps">📍</a> (Highlands)</span> <span class="year">Est. 1798</span></li>
+                <li data-name="Clynelish" data-region="Highlands" data-year="1967"><span><strong><a href="https://www.malts.com/en-gb/distilleries/clynelish" class="distillery-link" target="_blank">Clynelish</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Clynelish+Distillery+Scotland" class="map-icon" target="_blank" title="View on Maps">📍</a> (Highlands)</span> <span class="year">Est. 1967</span></li>
+                <li data-name="Dalmore" data-region="Highlands" data-year="1839"><span><strong><a href="https://www.thedalmore.com/" class="distillery-link" target="_blank">Dalmore</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Dalmore+Distillery+Scotland" class="map-icon" target="_blank" title="View on Maps">📍</a> (Highlands)</span> <span class="year">Est. 1839</span></li>
+                <li data-name="Deanston" data-region="Highlands" data-year="1965"><span><strong><a href="https://deanstonmalt.com/" class="distillery-link" target="_blank">Deanston</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Deanston+Distillery+Scotland" class="map-icon" target="_blank" title="View on Maps">📍</a> (Highlands)</span> <span class="year">Est. 1965</span></li>
+                <li data-name="Edradour" data-region="Highlands" data-year="1825"><span><strong><a href="https://edradour.com/" class="distillery-link" target="_blank">Edradour</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Edradour+Distillery+Scotland" class="map-icon" target="_blank" title="View on Maps">📍</a> (Highlands)</span> <span class="year">Est. 1825</span></li>
+                <li data-name="Fettercairn" data-region="Highlands" data-year="1824"><span><strong><a href="https://www.fettercairnwhisky.com/" class="distillery-link" target="_blank">Fettercairn</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Fettercairn+Distillery+Scotland" class="map-icon" target="_blank" title="View on Maps">📍</a> (Highlands)</span> <span class="year">Est. 1824</span></li>
+                <li data-name="Glen Garioch" data-region="Highlands" data-year="1797"><span><strong><a href="https://www.glengarioch.com/" class="distillery-link" target="_blank">Glen Garioch</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Glen+Garioch+Distillery+Scotland" class="map-icon" target="_blank" title="View on Maps">📍</a> (Highlands)</span> <span class="year">Est. 1797</span></li>
+                <li data-name="Glenmorangie" data-region="Highlands" data-year="1843"><span><strong><a href="https://www.glenmorangie.com/" class="distillery-link" target="_blank">Glenmorangie</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Glenmorangie+Distillery+Scotland" class="map-icon" target="_blank" title="View on Maps">📍</a> (Highlands)</span> <span class="year">Est. 1843</span></li>
+                <li data-name="Glengoyne" data-region="Highlands" data-year="1833"><span><strong><a href="https://www.glengoyne.com/" class="distillery-link" target="_blank">Glengoyne</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Glengoyne+Distillery+Scotland" class="map-icon" target="_blank" title="View on Maps">📍</a> (Highlands)</span> <span class="year">Est. 1833</span></li>
+                <li data-name="Glenturret" data-region="Highlands" data-year="1763"><span><strong><a href="https://www.theglenturret.com/" class="distillery-link" target="_blank">Glenturret</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Glenturret+Distillery+Scotland" class="map-icon" target="_blank" title="View on Maps">📍</a> (Highlands)</span> <span class="year">Est. 1763</span></li>
+                <li data-name="Oban" data-region="Highlands" data-year="1794"><span><strong><a href="https://www.malts.com/en-gb/distilleries/oban" class="distillery-link" target="_blank">Oban</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Oban+Distillery+Scotland" class="map-icon" target="_blank" title="View on Maps">📍</a> (Highlands)</span> <span class="year">Est. 1794</span></li>
+                <li data-name="Old Pulteney" data-region="Highlands" data-year="1826"><span><strong><a href="https://www.oldpulteney.com/" class="distillery-link" target="_blank">Old Pulteney</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Old+Pulteney+Distillery+Scotland" class="map-icon" target="_blank" title="View on Maps">📍</a> (Highlands)</span> <span class="year">Est. 1826</span></li>
+                <li data-name="Teaninich" data-region="Highlands" data-year="1817"><span><strong><a href="https://www.malts.com/" class="distillery-link" target="_blank">Teaninich</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Teaninich+Distillery+Scotland" class="map-icon" target="_blank" title="View on Maps">📍</a> (Highlands)</span> <span class="year">Est. 1817</span></li>
+                <li data-name="Tomatin" data-region="Highlands" data-year="1897"><span><strong><a href="https://www.tomatin.com/" class="distillery-link" target="_blank">Tomatin</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Tomatin+Distillery+Scotland" class="map-icon" target="_blank" title="View on Maps">📍</a> (Highlands)</span> <span class="year">Est. 1897</span></li>
+                <li data-name="Tullibardine" data-region="Highlands" data-year="1949"><span><strong><a href="https://www.tullibardine.com/" class="distillery-link" target="_blank">Tullibardine</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Tullibardine+Distillery+Scotland" class="map-icon" target="_blank" title="View on Maps">📍</a> (Highlands)</span> <span class="year">Est. 1949</span></li>
+                <li data-name="Ardbeg" data-region="Islay" data-year="1815"><span><strong><a href="https://www.ardbeg.com/" class="distillery-link" target="_blank">Ardbeg</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Ardbeg+Distillery+Scotland" class="map-icon" target="_blank" title="View on Maps">📍</a> (Islay)</span> <span class="year">Est. 1815</span></li>
+                <li data-name="Bowmore" data-region="Islay" data-year="1779"><span><strong><a href="https://www.bowmore.com/" class="distillery-link" target="_blank">Bowmore</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Bowmore+Distillery+Scotland" class="map-icon" target="_blank" title="View on Maps">📍</a> (Islay)</span> <span class="year">Est. 1779</span></li>
+                <li data-name="Bruichladdich" data-region="Islay" data-year="1881"><span><strong><a href="https://www.bruichladdich.com/" class="distillery-link" target="_blank">Bruichladdich</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Bruichladdich+Distillery+Scotland" class="map-icon" target="_blank" title="View on Maps">📍</a> (Islay)</span> <span class="year">Est. 1881</span></li>
+                <li data-name="Bunnahabhain" data-region="Islay" data-year="1881"><span><strong><a href="https://bunnahabhain.com/" class="distillery-link" target="_blank">Bunnahabhain</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Bunnahabhain+Distillery+Scotland" class="map-icon" target="_blank" title="View on Maps">📍</a> (Islay)</span> <span class="year">Est. 1881</span></li>
+                <li data-name="Caol Ila" data-region="Islay" data-year="1846"><span><strong><a href="https://www.malts.com/en-gb/distilleries/caol-ila" class="distillery-link" target="_blank">Caol Ila</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Caol+Ila+Distillery+Scotland" class="map-icon" target="_blank" title="View on Maps">📍</a> (Islay)</span> <span class="year">Est. 1846</span></li>
+                <li data-name="Kilchoman" data-region="Islay" data-year="2005"><span><strong><a href="https://kilchomandistillery.com/" class="distillery-link" target="_blank">Kilchoman</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Kilchoman+Distillery+Scotland" class="map-icon" target="_blank" title="View on Maps">📍</a> (Islay)</span> <span class="year">Est. 2005</span></li>
+                <li data-name="Lagavulin" data-region="Islay" data-year="1816"><span><strong><a href="https://www.malts.com/en-gb/distilleries/lagavulin" class="distillery-link" target="_blank">Lagavulin</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Lagavulin+Distillery+Scotland" class="map-icon" target="_blank" title="View on Maps">📍</a> (Islay)</span> <span class="year">Est. 1816</span></li>
+                <li data-name="Laphroaig" data-region="Islay" data-year="1815"><span><strong><a href="https://www.laphroaig.com/" class="distillery-link" target="_blank">Laphroaig</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Laphroaig+Distillery+Scotland" class="map-icon" target="_blank" title="View on Maps">📍</a> (Islay)</span> <span class="year">Est. 1815</span></li>
+            </ul>
+
+            <h3>Closed Distilleries</h3>
+            <ul class="scroll-list" id="scot-closed-list">
+                <li data-name="Banff" data-region="Highlands" data-year="1824"><span><strong>Banff</strong> <a href="https://www.google.com/maps/search/?api=1&query=Banff+Distillery+Scotland" class="map-icon" target="_blank" title="View on Maps">📍</a> (Highlands)</span> <span class="year">Closed 1983</span></li>
+                <li data-name="Brora" data-region="Highlands" data-year="1819"><span><strong><a href="https://www.brora.com/" class="distillery-link" target="_blank">Brora</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Brora+Distillery+Scotland" class="map-icon" target="_blank" title="View on Maps">📍</a> (Highlands)</span> <span class="year">Closed 1983</span></li>
+                <li data-name="Cambus" data-region="Lowlands" data-year="1806"><span><strong>Cambus</strong> <a href="https://www.google.com/maps/search/?api=1&query=Cambus+Distillery+Scotland" class="map-icon" target="_blank" title="View on Maps">📍</a> (Lowlands)</span> <span class="year">Closed 1993</span></li>
+                <li data-name="Coleburn" data-region="Speyside" data-year="1897"><span><strong>Coleburn</strong> <a href="https://www.google.com/maps/search/?api=1&query=Coleburn+Distillery+Scotland" class="map-icon" target="_blank" title="View on Maps">📍</a> (Speyside)</span> <span class="year">Closed 1985</span></li>
+                <li data-name="Convalmore" data-region="Speyside" data-year="1893"><span><strong>Convalmore</strong> <a href="https://www.google.com/maps/search/?api=1&query=Convalmore+Distillery+Scotland" class="map-icon" target="_blank" title="View on Maps">📍</a> (Speyside)</span> <span class="year">Closed 1985</span></li>
+                <li data-name="Dallas Dhu" data-region="Speyside" data-year="1899"><span><strong><a href="https://www.historicenvironment.scot/visit-a-place/places/dallas-dhu-historic-distillery/" class="distillery-link" target="_blank">Dallas Dhu</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Dallas+Dhu+Distillery+Scotland" class="map-icon" target="_blank" title="View on Maps">📍</a> (Speyside)</span> <span class="year">Closed 1983</span></li>
+                <li data-name="Glenugie" data-region="Highlands" data-year="1831"><span><strong>Glenugie</strong> <a href="https://www.google.com/maps/search/?api=1&query=Glenugie+Distillery+Scotland" class="map-icon" target="_blank" title="View on Maps">📍</a> (Highlands)</span> <span class="year">Closed 1983</span></li>
+                <li data-name="Imperial" data-region="Speyside" data-year="1897"><span><strong>Imperial</strong> <a href="https://www.google.com/maps/search/?api=1&query=Imperial+Distillery+Scotland" class="map-icon" target="_blank" title="View on Maps">📍</a> (Speyside)</span> <span class="year">Closed 1998</span></li>
+                <li data-name="Kinclaith" data-region="Lowlands" data-year="1957"><span><strong>Kinclaith</strong> <a href="https://www.google.com/maps/search/?api=1&query=Kinclaith+Distillery+Scotland" class="map-icon" target="_blank" title="View on Maps">📍</a> (Lowlands)</span> <span class="year">Closed 1975</span></li>
+                <li data-name="Littlemill" data-region="Lowlands" data-year="1772"><span><strong><a href="https://www.littlemilldistillery.com/" class="distillery-link" target="_blank">Littlemill</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Littlemill+Distillery+Scotland" class="map-icon" target="_blank" title="View on Maps">📍</a> (Lowlands)</span> <span class="year">Closed 1994</span></li>
+                <li data-name="Lochside" data-region="Highlands" data-year="1957"><span><strong>Lochside</strong> <a href="https://www.google.com/maps/search/?api=1&query=Lochside+Distillery+Scotland" class="map-icon" target="_blank" title="View on Maps">📍</a> (Highlands)</span> <span class="year">Closed 1992</span></li>
+                <li data-name="Port Ellen" data-region="Islay" data-year="1825"><span><strong><a href="https://www.portellen.com/" class="distillery-link" target="_blank">Port Ellen</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Port+Ellen+Distillery+Scotland" class="map-icon" target="_blank" title="View on Maps">📍</a> (Islay)</span> <span class="year">Closed 1983</span></li>
+                <li data-name="Rosebank" data-region="Lowlands" data-year="1840"><span><strong><a href="https://www.rosebank.com/" class="distillery-link" target="_blank">Rosebank</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Rosebank+Distillery+Scotland" class="map-icon" target="_blank" title="View on Maps">📍</a> (Lowlands)</span> <span class="year">Closed 1993</span></li>
+                <li data-name="St Magdalene" data-region="Lowlands" data-year="1798"><span><strong>St Magdalene</strong> <a href="https://www.google.com/maps/search/?api=1&query=St+Magdalene+Distillery+Scotland" class="map-icon" target="_blank" title="View on Maps">📍</a> (Lowlands)</span> <span class="year">Closed 1983</span></li>
+            </ul>
         </div>
+
+        <div class="distillery-box">
+            <h2>🇯🇵 Japan & 🇹🇼 Taiwan ROC</h2>
+            
+            <h3>Japan - Active Distilleries</h3>
+            <ul class="scroll-list">
+                <li><span><strong><a href="https://house.suntory.com/yamazaki-whisky" class="distillery-link" target="_blank">Yamazaki</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Yamazaki+Distillery+Japan" class="map-icon" target="_blank" title="View on Maps">📍</a> (Osaka)</span> <span class="year">Est. 1923</span></li>
+                <li><span><strong><a href="https://house.suntory.com/hakushu-whisky" class="distillery-link" target="_blank">Hakushu</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Hakushu+Distillery+Japan" class="map-icon" target="_blank" title="View on Maps">📍</a> (Yamanashi)</span> <span class="year">Est. 1973</span></li>
+                <li><span><strong><a href="https://www.nikka.com/" class="distillery-link" target="_blank">Yoichi</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Yoichi+Distillery+Japan" class="map-icon" target="_blank" title="View on Maps">📍</a> (Hokkaido)</span> <span class="year">Est. 1934</span></li>
+                <li><span><strong><a href="https://www.nikka.com/" class="distillery-link" target="_blank">Miyagikyo</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Miyagikyo+Distillery+Japan" class="map-icon" target="_blank" title="View on Maps">📍</a> (Miyagi)</span> <span class="year">Est. 1969</span></li>
+                <li><span><strong><a href="https://www.facebook.com/ChichibuDistillery/" class="distillery-link" target="_blank">Chichibu</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Chichibu+Distillery+Japan" class="map-icon" target="_blank" title="View on Maps">📍</a> (Saitama)</span> <span class="year">Est. 2008</span></li>
+                <li><span><strong><a href="https://akkeshi-distillery.com/" class="distillery-link" target="_blank">Akkeshi</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Akkeshi+Distillery+Japan" class="map-icon" target="_blank" title="View on Maps">📍</a> (Hokkaido)</span> <span class="year">Est. 2016</span></li>
+                <li><span><strong><a href="https://www.hombo.co.jp/" class="distillery-link" target="_blank">Mars Shinshu</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Mars+Shinshu+Distillery+Japan" class="map-icon" target="_blank" title="View on Maps">📍</a> (Nagano)</span> <span class="year">Est. 1985</span></li>
+                <li><span><strong><a href="https://www.hombo.co.jp/" class="distillery-link" target="_blank">Mars Tsunuki</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Mars+Tsunuki+Distillery+Japan" class="map-icon" target="_blank" title="View on Maps">📍</a> (Kagoshima)</span> <span class="year">Est. 2016</span></li>
+                <li><span><strong><a href="https://shizuoka-distillery.jp/" class="distillery-link" target="_blank">Shizuoka</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Shizuoka+Distillery+Japan" class="map-icon" target="_blank" title="View on Maps">📍</a> (Shizuoka)</span> <span class="year">Est. 2016</span></li>
+                <li><span><strong><a href="https://kanosuke.com/" class="distillery-link" target="_blank">Kanosuke</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Kanosuke+Distillery+Japan" class="map-icon" target="_blank" title="View on Maps">📍</a> (Kagoshima)</span> <span class="year">Est. 2017</span></li>
+                <li><span><strong><a href="https://www.romanbeer.com/whisky/" class="distillery-link" target="_blank">Nagahama</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Nagahama+Distillery+Japan" class="map-icon" target="_blank" title="View on Maps">📍</a> (Shiga)</span> <span class="year">Est. 2016</span></li>
+                <li><span><strong><a href="https://www.sakuraodistillery.com/" class="distillery-link" target="_blank">Sakurao</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Sakurao+Distillery+Japan" class="map-icon" target="_blank" title="View on Maps">📍</a> (Hiroshima)</span> <span class="year">Est. 2018</span></li>
+                <li><span><strong><a href="https://asanokawa.co.jp/" class="distillery-link" target="_blank">Asaka</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Asaka+Distillery+Japan" class="map-icon" target="_blank" title="View on Maps">📍</a> (Fukushima)</span> <span class="year">Est. 2016</span></li>
+            </ul>
+
+            <h3>Japan - Closed Distilleries</h3>
+            <ul class="scroll-list">
+                <li><span><strong>Karuizawa</strong> <a href="https://www.google.com/maps/search/?api=1&query=Karuizawa+Distillery+Japan" class="map-icon" target="_blank" title="View on Maps">📍</a> (Nagano)</span> <span class="year">Closed 2000</span></li>
+                <li><span><strong>Hanyu</strong> <a href="https://www.google.com/maps/search/?api=1&query=Hanyu+Distillery+Japan" class="map-icon" target="_blank" title="View on Maps">📍</a> (Saitama)</span> <span class="year">Closed 2000</span></li>
+                <li><span><strong>Kawasaki</strong> <a href="https://www.google.com/maps/search/?api=1&query=Kawasaki+Distillery+Japan" class="map-icon" target="_blank" title="View on Maps">📍</a> (Kanagawa)</span> <span class="year">Closed 2003</span></li>
+            </ul>
+
+            <h3>Taiwan ROC - Active Distilleries</h3>
+            <ul class="scroll-list" style="max-height: 150px;">
+                <li><span><strong><a href="https://www.kavalanwhisky.com/" class="distillery-link" target="_blank">Kavalan</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Kavalan+Distillery+Taiwan" class="map-icon" target="_blank" title="View on Maps">📍</a> (Yilan)</span> <span class="year">Est. 2005</span></li>
+                <li><span><strong><a href="https://event.ttl.com.tw/nn/" class="distillery-link" target="_blank">Nantou / OMAR</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Nantou+Distillery+Taiwan" class="map-icon" target="_blank" title="View on Maps">📍</a> (Nantou)</span> <span class="year">Est. 2008</span></li>
+                <li><span><strong><a href="https://www.holydistillery.com/" class="distillery-link" target="_blank">Holy Distillery</a></strong> <a href="https://www.google.com/maps/search/?api=1&query=Holy+Distillery+Taiwan" class="map-icon" target="_blank" title="View on Maps">📍</a> (Taipei)</span> <span class="year">Est. 2016</span></li>
+            </ul>
+            
+            <h3>Taiwan ROC - Closed Distilleries</h3>
+            <ul class="scroll-list" style="max-height: 100px;">
+                <li><span style="color: #888;">No major single malt distilleries currently recorded as permanently closed.</span> <span class="year">-</span></li>
+            </ul>
+        </div>
+
     </main>
 
     <aside>
@@ -605,6 +819,7 @@
 </footer>
 
 <script>
+    // --- SIDEBAR SHOP SEARCH SCRIPT ---
     const searchInput = document.getElementById('shop-search');
     const shopItems = document.querySelectorAll('.shop-list li');
     const buttons = document.querySelectorAll('.filter-btn');
@@ -612,7 +827,6 @@
 
     let activeFilter = 'all';
 
-    // 👉 City Matcher (Handles both English and Chinese)
     function matchCity(text, filter) {
         if (filter === 'all') return true;
         if (filter === 'taipei') return text.includes('台北') || text.includes('taipei') || text.includes('新北');
@@ -621,7 +835,6 @@
         return true;
     }
 
-    // 👉 Safe Highlighter: Ignores text inside HTML tags
     function highlightSafe(html, keyword) {
         if (!keyword) return html;
         const safeKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -673,7 +886,6 @@
         noResults.style.display = visibleCount === 0 ? 'block' : 'none';
     }
 
-    // 👉 Event Listeners
     searchInput.addEventListener('input', updateList);
 
     buttons.forEach(btn => {
@@ -684,6 +896,70 @@
             updateList();
         });
     });
+
+
+    // --- SCOTTISH DISTILLERIES SEARCH & SORT SCRIPT ---
+    const scotSearch = document.getElementById('scot-search');
+    const scotRegion = document.getElementById('scot-region');
+    const scotSort = document.getElementById('scot-sort');
+    const scotNoResults = document.getElementById('scot-no-results');
+
+    const scotActiveList = document.getElementById('scot-active-list');
+    const scotClosedList = document.getElementById('scot-closed-list');
+
+    function updateScotDistilleries() {
+        const keyword = scotSearch.value.toLowerCase().trim();
+        const regionFilter = scotRegion.value;
+        const sortValue = scotSort.value;
+        let totalVisible = 0;
+
+        const processList = (listElement) => {
+            let items = Array.from(listElement.querySelectorAll('li'));
+            
+            items.forEach(item => {
+                const name = item.dataset.name.toLowerCase();
+                const region = item.dataset.region;
+                
+                const matchesKeyword = name.includes(keyword) || region.toLowerCase().includes(keyword);
+                const matchesRegion = (regionFilter === 'all') || (region === regionFilter);
+                
+                if (matchesKeyword && matchesRegion) {
+                    item.style.display = 'flex';
+                    totalVisible++;
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+
+            items.sort((a, b) => {
+                const yearA = parseInt(a.dataset.year) || 0;
+                const yearB = parseInt(b.dataset.year) || 0;
+                const nameA = a.dataset.name.toLowerCase();
+                const nameB = b.dataset.name.toLowerCase();
+                const regA = a.dataset.region.toLowerCase();
+                const regB = b.dataset.region.toLowerCase();
+
+                if (sortValue === 'year-asc') return yearA - yearB;
+                if (sortValue === 'year-desc') return yearB - yearA;
+                if (sortValue === 'name-asc') return nameA.localeCompare(nameB);
+                if (sortValue === 'region-asc') {
+                    if (regA === regB) return nameA.localeCompare(nameB);
+                    return regA.localeCompare(regB);
+                }
+            });
+
+            items.forEach(item => listElement.appendChild(item));
+        };
+
+        processList(scotActiveList);
+        processList(scotClosedList);
+        
+        scotNoResults.style.display = totalVisible === 0 ? 'block' : 'none';
+    }
+
+    scotSearch.addEventListener('input', updateScotDistilleries);
+    scotRegion.addEventListener('change', updateScotDistilleries);
+    scotSort.addEventListener('change', updateScotDistilleries);
 </script>
 </body>
 </html>
