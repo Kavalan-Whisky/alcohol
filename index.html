@@ -199,6 +199,38 @@
             min-height: 1.4em;
             text-align: center;
         }
+        .auth-disclaimer {
+            margin-top: 18px;
+            padding: 12px 14px;
+            background-color: #111;
+            border: 1px solid #333;
+            border-left: 3px solid var(--primary-color);
+            border-radius: 4px;
+            text-align: left;
+            font-size: 0.75em;
+            color: #bbb;
+            line-height: 1.65;
+        }
+        .auth-disclaimer-title {
+            color: var(--primary-color);
+            font-weight: bold;
+            margin: 0 0 6px 0;
+            font-size: 0.95em;
+        }
+        .auth-disclaimer ul {
+            margin: 4px 0 0 0;
+            padding-left: 18px;
+        }
+        .auth-disclaimer li {
+            margin-bottom: 3px;
+        }
+        .auth-disclaimer a {
+            color: var(--primary-color);
+            text-decoration: underline;
+        }
+        .auth-disclaimer a:hover {
+            color: #fff;
+        }
         .auth-hint {
             color: var(--text-muted);
             font-size: 0.72em;
@@ -789,6 +821,17 @@
         </div>
 
         <p id="pin-error" class="pin-error" role="alert" aria-live="polite"></p>
+
+        <div class="auth-disclaimer">
+            <p class="auth-disclaimer-title">⚠️ 輸入 PIN 即表示您已閱讀並同意:</p>
+            <ul>
+                <li>您已年滿 <strong>18 歲</strong>(法定飲酒年齡),理性飲酒不酒駕</li>
+                <li>本站為個人非營利專案,與所列店家、酒廠無任何隸屬關係</li>
+                <li>所有資料僅供個人參考,請以各店家官方資訊為準</li>
+                <li>本站採 <a href="https://creativecommons.org/licenses/by-nc/4.0/deed.zh-hant" target="_blank" rel="noopener noreferrer">CC BY-NC 4.0</a> 授權,禁止任何商業用途</li>
+                <li>使用本站所產生之任何後果,本站概不負責</li>
+            </ul>
+        </div>
 
         <p class="auth-hint">
             Demo PINs · <strong>Admin</strong>: 1234 · <strong>VIP</strong>: 8888 · <strong>Guest</strong>: 0000
