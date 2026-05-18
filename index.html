@@ -23,7 +23,7 @@
             line-height: 1.6;
         }
         
-        /* --- 看屁看 --- */
+        /* --- AUTHENTICATION OVERLAY --- */
         #verification-overlay {
             position: fixed;
             top: 0;
@@ -39,59 +39,225 @@
         }
         .verify-box {
             background-color: var(--bg-light);
-            padding: 40px;
+            padding: 32px 28px;
             border-radius: 8px;
             border-top: 5px solid var(--primary-color);
             box-shadow: 0 10px 40px rgba(0,0,0,0.6);
             text-align: center;
-            max-width: 400px;
-            width: 90%;
+            max-width: 360px;
+            width: 92%;
         }
         .verify-box h2 {
-            margin-top: 0;
+            margin: 0 0 4px 0;
             color: var(--primary-color);
             letter-spacing: 1px;
         }
-        .verify-box input {
-            width: 100%;
-            padding: 12px;
-            margin: 20px 0 10px 0;
+        .verify-box .verify-subtitle {
+            color: var(--text-muted);
+            font-size: 0.85em;
+            margin: 0 0 18px 0;
+        }
+        .verify-tabs {
+            display: flex;
+            gap: 6px;
+            background: #111;
             border-radius: 6px;
-            border: 1px solid #444;
-            background-color: #111;
+            padding: 4px;
+            margin-bottom: 18px;
+        }
+        .verify-tab {
+            flex: 1;
+            padding: 8px 6px;
+            background: transparent;
+            color: var(--text-muted);
+            border: none;
+            border-radius: 4px;
+            font-size: 0.9em;
+            cursor: pointer;
+            font-family: inherit;
+            transition: background 0.2s, color 0.2s;
+        }
+        .verify-tab:hover {
             color: #fff;
-            font-size: 1.2em;
-            text-align: center;
-            box-sizing: border-box;
-            outline: none;
-            transition: border-color 0.2s;
         }
-        .verify-box input:focus {
-            border-color: var(--primary-color);
-        }
-        .verify-box button {
-            width: 100%;
-            padding: 12px;
+        .verify-tab.active {
             background-color: var(--primary-color);
             color: #000;
-            border: none;
-            border-radius: 6px;
             font-weight: bold;
-            font-size: 1.1em;
-            cursor: pointer;
-            transition: background 0.2s;
         }
-        .verify-box button:hover {
-            background-color: #e6c24a;
+        .verify-method {
+            display: none;
+        }
+        .verify-method.active {
+            display: block;
+        }
+        .verify-help {
+            color: #ccc;
+            font-size: 0.9em;
+            margin: 0 0 14px 0;
+        }
+        .pin-display {
+            display: flex;
+            justify-content: center;
+            gap: 14px;
+            margin: 16px 0 20px 0;
+        }
+        .pin-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 2px solid #555;
+            background-color: transparent;
+            transition: background-color 0.15s, border-color 0.15s, transform 0.1s;
+        }
+        .pin-dot.filled {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            transform: scale(1.1);
+        }
+        .pin-display.shake {
+            animation: pin-shake 0.4s;
+        }
+        @keyframes pin-shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            75% { transform: translateX(8px); }
+        }
+        .pin-pad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .pin-key {
+            padding: 14px 0;
+            background-color: #111;
+            color: #fff;
+            border: 1px solid #444;
+            border-radius: 6px;
+            font-size: 1.3em;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: inherit;
+            transition: background 0.15s, transform 0.05s;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+        .pin-key:hover:not(:disabled) {
+            background-color: #222;
+            border-color: var(--primary-color);
+        }
+        .pin-key:active:not(:disabled) {
+            transform: scale(0.95);
+            background-color: var(--primary-color);
+            color: #000;
+        }
+        .pin-key:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        .pin-key.pin-fn {
+            font-size: 0.9em;
+            color: var(--text-muted);
+        }
+        #google-signin-btn {
+            display: flex;
+            justify-content: center;
+            min-height: 44px;
+            margin: 12px 0;
+        }
+        .google-not-configured {
+            color: var(--text-muted);
+            font-size: 0.85em;
+            background: #111;
+            border: 1px dashed #444;
+            border-radius: 6px;
+            padding: 14px;
+            line-height: 1.5;
+        }
+        .google-not-configured code {
+            background: #000;
+            padding: 1px 5px;
+            border-radius: 3px;
+            color: var(--primary-color);
+            font-size: 0.9em;
         }
         .verify-error {
             color: #ff4d4d;
-            font-size: 0.9em;
+            font-size: 0.85em;
+            margin: 6px 0 0 0;
+            min-height: 1.2em;
+        }
+        .verify-hint {
+            color: var(--text-muted);
+            font-size: 0.75em;
+            margin-top: 12px;
+            padding-top: 10px;
+            border-top: 1px dashed #444;
+            line-height: 1.5;
+        }
+
+        /* --- AUTH STATUS BAR (post-login) --- */
+        .auth-status {
+            position: absolute;
+            top: 16px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.85em;
+        }
+        .tier-badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            font-size: 0.8em;
+        }
+        .tier-badge.tier-admin {
+            background-color: var(--primary-color);
+            color: #000;
+        }
+        .tier-badge.tier-vip {
+            background-color: #4a90e2;
+            color: #fff;
+        }
+        .tier-badge.tier-guest {
+            background-color: #555;
+            color: #ddd;
+        }
+        .logout-btn {
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid #444;
+            border-radius: 4px;
+            padding: 4px 10px;
+            font-size: 0.8em;
+            cursor: pointer;
+            font-family: inherit;
+            transition: color 0.2s, border-color 0.2s;
+        }
+        .logout-btn:hover {
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        .tier-locked-notice {
+            background-color: var(--bg-light);
+            padding: 30px;
+            border-radius: 8px;
+            border: 1px dashed #444;
+            text-align: center;
+            color: var(--text-muted);
+            margin-bottom: 30px;
+        }
+        .tier-locked-notice .lock-icon {
+            font-size: 2em;
+            display: block;
             margin-bottom: 10px;
-            display: none;
         }
 
         header {
+            position: relative;
             background-color: #111;
             padding: 40px 0;
             text-align: center;
@@ -520,23 +686,68 @@
 <div id="verification-overlay">
     <div class="verify-box">
         <h2>Authentication</h2>
-        <p style="color: #ccc; margin-bottom: 5px;">Please enter the access code to continue.</p>
-        <p style="font-size: 0.8em; color: var(--text-muted); margin-top: 0;">(Hint: type "1")</p>
-        <input type="password" id="verify-input" placeholder="Enter code..." autocomplete="off">
-        <p id="verify-error" class="verify-error">Incorrect code. Please try again.</p>
-        <button id="verify-btn">Enter Hub</button>
+        <p class="verify-subtitle">Choose a sign-in method</p>
+
+        <div class="verify-tabs" role="tablist">
+            <button class="verify-tab active" data-method="pin" type="button">🔢 PIN Code</button>
+            <button class="verify-tab" data-method="google" type="button">🔐 Google</button>
+        </div>
+
+        <div id="verify-pin" class="verify-method active">
+            <p class="verify-help">Enter your 4-digit PIN</p>
+            <div class="pin-display" id="pin-display">
+                <span class="pin-dot"></span>
+                <span class="pin-dot"></span>
+                <span class="pin-dot"></span>
+                <span class="pin-dot"></span>
+            </div>
+            <div class="pin-pad">
+                <button class="pin-key" data-key="1" type="button">1</button>
+                <button class="pin-key" data-key="2" type="button">2</button>
+                <button class="pin-key" data-key="3" type="button">3</button>
+                <button class="pin-key" data-key="4" type="button">4</button>
+                <button class="pin-key" data-key="5" type="button">5</button>
+                <button class="pin-key" data-key="6" type="button">6</button>
+                <button class="pin-key" data-key="7" type="button">7</button>
+                <button class="pin-key" data-key="8" type="button">8</button>
+                <button class="pin-key" data-key="9" type="button">9</button>
+                <button class="pin-key pin-fn" data-key="CLR" type="button">CLR</button>
+                <button class="pin-key" data-key="0" type="button">0</button>
+                <button class="pin-key pin-fn" data-key="DEL" type="button">⌫</button>
+            </div>
+            <p id="pin-error" class="verify-error"></p>
+        </div>
+
+        <div id="verify-google" class="verify-method">
+            <p class="verify-help">Sign in with your Google account</p>
+            <div id="google-signin-btn"></div>
+            <p id="google-error" class="verify-error"></p>
+        </div>
+
+        <p class="verify-hint">
+            Demo PINs · <strong>Admin</strong>: 1234 · <strong>VIP</strong>: 8888 · <strong>Guest</strong>: 0000
+        </p>
     </div>
 </div>
 
 <header>
     <h1>🥃 FLY'S WHISKY HUB</h1>
     <p>Store locations & Distilleries</p>
+    <div class="auth-status" id="auth-status" style="display:none;">
+        <span id="tier-badge" class="tier-badge"></span>
+        <button id="logout-btn" class="logout-btn" type="button">Sign Out</button>
+    </div>
 </header>
 
 <div class="container">
     <main>
-        
-        <div class="distillery-box">
+
+        <div class="tier-locked-notice" id="tier-locked-notice" style="display:none;">
+            <span class="lock-icon">🔒</span>
+            <p id="tier-locked-text">Some sections are hidden at your access level.</p>
+        </div>
+
+        <div class="distillery-box" data-min-tier="admin">
             <h2>🏴󠁧󠁢󠁳󠁣󠁴󠁿 Scottish Distilleries</h2>
             
             <div class="distillery-controls">
@@ -568,7 +779,7 @@
             <ul class="scroll-list" id="scot-closed-list"></ul>
         </div>
 
-        <div class="distillery-box">
+        <div class="distillery-box" data-min-tier="vip">
             <h2>🇯🇵 Japan & 🇹🇼 Taiwan ROC</h2>
             
             <h3>Japan - Active Distilleries</h3>
@@ -900,32 +1111,326 @@
 </footer>
 
 <script>
-    // --- VERIFICATION OVERLAY SCRIPT ---
-    const verifyOverlay = document.getElementById('verification-overlay');
-    const verifyInput = document.getElementById('verify-input');
-    const verifyBtn = document.getElementById('verify-btn');
-    const verifyError = document.getElementById('verify-error');
+    // --- AUTHENTICATION MODULE ---
+    // Edit this config to change PINs, allowed emails, or enable Google Sign-In.
+    // To generate a new PIN hash, run in the browser console:
+    //   crypto.subtle.digest('SHA-256', new TextEncoder().encode('YOUR_PIN'))
+    //     .then(b => console.log([...new Uint8Array(b)].map(x => x.toString(16).padStart(2,'0')).join('')))
+    const AUTH_CONFIG = {
+        PIN_LENGTH: 4,
+        PIN_HASHES: {
+            // SHA-256("1234")
+            '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4': { tier: 'admin' },
+            // SHA-256("8888")
+            '2926a2731f4b312c08982cacf8061eb14bf65c1a87cc5d70e864e079c6220731': { tier: 'vip' },
+            // SHA-256("0000")
+            '9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0': { tier: 'guest' }
+        },
+        MAX_ATTEMPTS: 5,
+        LOCKOUT_MINUTES: 5,
+        SESSION_DAYS: 7,
+        // To enable Google Sign-In:
+        //  1. Create an OAuth 2.0 Client ID at https://console.cloud.google.com/apis/credentials
+        //  2. Add your site's origin to "Authorized JavaScript origins"
+        //  3. Paste the Client ID below
+        GOOGLE_CLIENT_ID: '',
+        // Allowed Google emails (empty = allow ANY Google account). Use lowercase.
+        GOOGLE_ALLOWED_EMAILS: [],
+        // Emails that get admin tier on Google sign-in (lowercase). Others default to vip.
+        GOOGLE_ADMIN_EMAILS: []
+    };
 
-    // Lock scrolling initially
+    const TIER_LEVELS = { guest: 1, vip: 2, admin: 3 };
+    const STORAGE = {
+        session: 'whisky_auth_session',
+        attempts: 'whisky_auth_attempts',
+        lockout: 'whisky_auth_lockout_until'
+    };
+
+    const verifyOverlay = document.getElementById('verification-overlay');
+    const pinDisplay = document.getElementById('pin-display');
+    const pinDots = pinDisplay.querySelectorAll('.pin-dot');
+    const pinError = document.getElementById('pin-error');
+    const googleError = document.getElementById('google-error');
+    const authStatus = document.getElementById('auth-status');
+    const tierBadge = document.getElementById('tier-badge');
+    const lockedNotice = document.getElementById('tier-locked-notice');
+    const lockedText = document.getElementById('tier-locked-text');
+
     document.body.style.overflow = 'hidden';
 
-    function checkVerification() {
-        if (verifyInput.value.trim() === '1') {
-            verifyOverlay.style.display = 'none';
-            document.body.style.overflow = ''; // Unlock scrolling
+    async function sha256Hex(str) {
+        const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+        return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    function getSession() {
+        try {
+            const raw = localStorage.getItem(STORAGE.session);
+            if (!raw) return null;
+            const s = JSON.parse(raw);
+            if (!s || !s.tier || s.expires < Date.now()) {
+                localStorage.removeItem(STORAGE.session);
+                return null;
+            }
+            return s;
+        } catch (_) { return null; }
+    }
+
+    function setSession(tier, method) {
+        const s = {
+            tier,
+            method,
+            expires: Date.now() + AUTH_CONFIG.SESSION_DAYS * 86400000
+        };
+        localStorage.setItem(STORAGE.session, JSON.stringify(s));
+        return s;
+    }
+
+    function getLockoutMs() {
+        const until = parseInt(localStorage.getItem(STORAGE.lockout) || '0', 10);
+        return until > Date.now() ? until - Date.now() : 0;
+    }
+
+    function recordFailure() {
+        const n = parseInt(localStorage.getItem(STORAGE.attempts) || '0', 10) + 1;
+        if (n >= AUTH_CONFIG.MAX_ATTEMPTS) {
+            localStorage.setItem(STORAGE.lockout, (Date.now() + AUTH_CONFIG.LOCKOUT_MINUTES * 60000).toString());
+            localStorage.removeItem(STORAGE.attempts);
+            return { locked: true, attempts: n };
+        }
+        localStorage.setItem(STORAGE.attempts, n.toString());
+        return { locked: false, attempts: n };
+    }
+
+    function clearFailures() {
+        localStorage.removeItem(STORAGE.attempts);
+        localStorage.removeItem(STORAGE.lockout);
+    }
+
+    function applyTierGating(tier) {
+        const level = TIER_LEVELS[tier] || 0;
+        const hiddenLabels = [];
+        document.querySelectorAll('[data-min-tier]').forEach(el => {
+            const required = TIER_LEVELS[el.dataset.minTier] || 99;
+            if (level >= required) {
+                el.style.display = '';
+            } else {
+                el.style.display = 'none';
+                const h2 = el.querySelector('h2');
+                if (h2) hiddenLabels.push(`${h2.textContent.trim()} (requires ${el.dataset.minTier.toUpperCase()})`);
+            }
+        });
+        if (hiddenLabels.length > 0) {
+            lockedText.innerHTML = 'Hidden at your access level: ' +
+                hiddenLabels.map(l => `<strong>${l}</strong>`).join(' · ');
+            lockedNotice.style.display = '';
         } else {
-            verifyError.style.display = 'block';
-            verifyInput.value = '';
-            verifyInput.focus();
+            lockedNotice.style.display = 'none';
+        }
+        tierBadge.textContent = tier.toUpperCase();
+        tierBadge.className = 'tier-badge tier-' + tier;
+        authStatus.style.display = '';
+    }
+
+    function grantAccess(tier, method) {
+        setSession(tier, method);
+        clearFailures();
+        applyTierGating(tier);
+        verifyOverlay.style.display = 'none';
+        document.body.style.overflow = '';
+    }
+
+    function signOut() {
+        localStorage.removeItem(STORAGE.session);
+        location.reload();
+    }
+
+    document.getElementById('logout-btn').addEventListener('click', signOut);
+
+    // --- Lockout countdown UI ---
+    let lockoutTimer = null;
+    function refreshLockoutUI() {
+        const ms = getLockoutMs();
+        const keys = document.querySelectorAll('.pin-key');
+        if (ms > 0) {
+            const sec = Math.ceil(ms / 1000);
+            const min = Math.floor(sec / 60);
+            const s = sec % 60;
+            pinError.textContent = `🔒 Locked. Try again in ${min}:${s.toString().padStart(2, '0')}`;
+            keys.forEach(k => k.disabled = true);
+            if (!lockoutTimer) lockoutTimer = setInterval(refreshLockoutUI, 1000);
+        } else {
+            keys.forEach(k => k.disabled = false);
+            if (lockoutTimer) {
+                clearInterval(lockoutTimer);
+                lockoutTimer = null;
+                pinError.textContent = '';
+            }
         }
     }
 
-    verifyBtn.addEventListener('click', checkVerification);
-    verifyInput.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            checkVerification();
+    // --- PIN PAD ---
+    let pinBuffer = '';
+    let pinSubmitting = false;
+
+    function renderPinDots() {
+        pinDots.forEach((d, i) => d.classList.toggle('filled', i < pinBuffer.length));
+    }
+
+    function appendPin(digit) {
+        if (pinSubmitting || getLockoutMs() > 0) return;
+        if (pinBuffer.length >= AUTH_CONFIG.PIN_LENGTH) return;
+        pinError.textContent = '';
+        pinBuffer += digit;
+        renderPinDots();
+        if (pinBuffer.length === AUTH_CONFIG.PIN_LENGTH) submitPin();
+    }
+
+    function backspacePin() {
+        if (pinSubmitting) return;
+        pinBuffer = pinBuffer.slice(0, -1);
+        renderPinDots();
+    }
+
+    function clearPin() {
+        if (pinSubmitting) return;
+        pinBuffer = '';
+        renderPinDots();
+        pinError.textContent = '';
+    }
+
+    async function submitPin() {
+        pinSubmitting = true;
+        const entered = pinBuffer;
+        const hash = await sha256Hex(entered);
+        const match = AUTH_CONFIG.PIN_HASHES[hash];
+        if (match) {
+            grantAccess(match.tier, 'pin');
+            pinSubmitting = false;
+            return;
         }
+        pinDisplay.classList.remove('shake');
+        void pinDisplay.offsetWidth;
+        pinDisplay.classList.add('shake');
+        const r = recordFailure();
+        if (r.locked) {
+            refreshLockoutUI();
+        } else {
+            const left = AUTH_CONFIG.MAX_ATTEMPTS - r.attempts;
+            pinError.textContent = `Incorrect PIN. ${left} attempt${left === 1 ? '' : 's'} remaining.`;
+        }
+        pinBuffer = '';
+        renderPinDots();
+        pinSubmitting = false;
+    }
+
+    document.querySelectorAll('.pin-key').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const k = btn.dataset.key;
+            if (k === 'DEL') backspacePin();
+            else if (k === 'CLR') clearPin();
+            else appendPin(k);
+        });
     });
+
+    document.addEventListener('keydown', e => {
+        if (verifyOverlay.style.display === 'none') return;
+        const pinTab = document.getElementById('verify-pin');
+        if (!pinTab.classList.contains('active')) return;
+        if (/^[0-9]$/.test(e.key)) { appendPin(e.key); e.preventDefault(); }
+        else if (e.key === 'Backspace') { backspacePin(); e.preventDefault(); }
+        else if (e.key === 'Escape') { clearPin(); e.preventDefault(); }
+    });
+
+    // --- TAB SWITCHING ---
+    document.querySelectorAll('.verify-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.verify-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.verify-method').forEach(m => m.classList.remove('active'));
+            tab.classList.add('active');
+            document.getElementById('verify-' + tab.dataset.method).classList.add('active');
+        });
+    });
+
+    // --- GOOGLE SIGN-IN ---
+    function parseJwtPayload(token) {
+        try {
+            const part = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+            const json = decodeURIComponent(atob(part).split('').map(c =>
+                '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+            ).join(''));
+            return JSON.parse(json);
+        } catch (_) { return null; }
+    }
+
+    window.handleGoogleCredential = function(response) {
+        const payload = parseJwtPayload(response.credential);
+        if (!payload || !payload.email) {
+            googleError.textContent = 'Invalid response from Google.';
+            return;
+        }
+        const email = payload.email.toLowerCase();
+        const allowed = AUTH_CONFIG.GOOGLE_ALLOWED_EMAILS;
+        if (allowed.length > 0 && !allowed.includes(email)) {
+            googleError.textContent = `${email} is not authorised for this site.`;
+            return;
+        }
+        const tier = AUTH_CONFIG.GOOGLE_ADMIN_EMAILS.includes(email) ? 'admin' : 'vip';
+        grantAccess(tier, 'google:' + email);
+    };
+
+    function initGoogleSignIn() {
+        const target = document.getElementById('google-signin-btn');
+        if (!AUTH_CONFIG.GOOGLE_CLIENT_ID) {
+            target.innerHTML =
+                '<div class="google-not-configured">' +
+                'Google Sign-In is not configured.<br>' +
+                'Set <code>AUTH_CONFIG.GOOGLE_CLIENT_ID</code> in the page script to enable.' +
+                '</div>';
+            return;
+        }
+        const s = document.createElement('script');
+        s.src = 'https://accounts.google.com/gsi/client';
+        s.async = true;
+        s.defer = true;
+        s.onload = () => {
+            try {
+                google.accounts.id.initialize({
+                    client_id: AUTH_CONFIG.GOOGLE_CLIENT_ID,
+                    callback: window.handleGoogleCredential,
+                    auto_select: false
+                });
+                google.accounts.id.renderButton(target, {
+                    theme: 'filled_black',
+                    size: 'large',
+                    shape: 'rectangular',
+                    text: 'signin_with',
+                    width: 260
+                });
+            } catch (err) {
+                target.innerHTML = '<div class="google-not-configured">Failed to load Google Sign-In.</div>';
+            }
+        };
+        s.onerror = () => {
+            target.innerHTML = '<div class="google-not-configured">Could not reach Google. Check your network.</div>';
+        };
+        document.head.appendChild(s);
+    }
+
+    // --- BOOTSTRAP ---
+    (function init() {
+        const session = getSession();
+        if (session) {
+            applyTierGating(session.tier);
+            verifyOverlay.style.display = 'none';
+            document.body.style.overflow = '';
+            return;
+        }
+        renderPinDots();
+        refreshLockoutUI();
+        initGoogleSignIn();
+    })();
 
     // --- JS DATABASE: SCOTLAND DISTILLERIES (NEVER TRUNCATED!) ---
     const scotActiveData = [
