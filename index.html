@@ -138,6 +138,60 @@
             margin-bottom: 15px;
         }
 
+        .store-map-container {
+            background-color: #111;
+            border: 1px solid #444;
+            border-radius: 8px;
+            padding: 8px;
+            margin-bottom: 20px;
+        }
+        .store-map-container iframe {
+            display: block;
+            width: 100%;
+            height: 280px;
+            border: 0;
+            border-radius: 6px;
+            background-color: #222;
+        }
+        .store-map-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-top: 8px;
+            font-size: 0.8em;
+            color: var(--text-muted);
+        }
+        .store-map-meta .map-current {
+            flex: 1;
+            min-width: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .open-maps-btn {
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: var(--primary-color);
+            color: #000;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.85em;
+            transition: background 0.2s;
+            white-space: nowrap;
+        }
+        .open-maps-btn:hover {
+            background-color: #e6c24a;
+        }
+        .shop-list li.map-active {
+            background-color: rgba(212, 175, 55, 0.08);
+            border-radius: 4px;
+            padding: 6px;
+            margin-left: -6px;
+            margin-right: -6px;
+        }
+
         .distillery-box {
             background-color: var(--bg-light);
             padding: 25px;
@@ -559,7 +613,24 @@
     <aside>
         <h2 class="sidebar-title">Taiwan Whisky Shops</h2>
         <p class="sidebar-subtitle">Retailers, addresses, and hours:</p>
-        
+
+        <div class="store-map-container">
+            <iframe
+                id="store-map"
+                title="Whisky stores map"
+                src="https://maps.google.com/maps?q=whisky+shop+Taiwan&z=7&output=embed"
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+                allowfullscreen>
+            </iframe>
+            <div class="store-map-meta">
+                <span class="map-current" id="map-current-label">📍 Showing: Whisky shops across Taiwan</span>
+                <a id="open-in-maps" class="open-maps-btn"
+                   href="https://www.google.com/maps/search/?api=1&query=whisky+shop+Taiwan"
+                   target="_blank" rel="noopener noreferrer">Open in Google Maps ↗</a>
+            </div>
+        </div>
+
         <div class="search-container">
             <input 
                 type="text" 
@@ -972,6 +1043,68 @@ const officialSites = {
     "Glen Scotia": "https://www.glenscotia.com"
 };
     renderScotDistilleries();
+
+    // --- EMBEDDED STORE MAP SCRIPT ---
+    const storeMapFrame = document.getElementById('store-map');
+    const openInMapsBtn = document.getElementById('open-in-maps');
+    const mapCurrentLabel = document.getElementById('map-current-label');
+    const mapContainer = document.querySelector('.store-map-container');
+
+    function extractMapQuery(url) {
+        try {
+            const u = new URL(url, window.location.href);
+            return u.searchParams.get('query') || u.searchParams.get('q') || '';
+        } catch (_) {
+            return '';
+        }
+    }
+
+    function showOnEmbeddedMap(query, label, originalUrl) {
+        if (!query) return;
+        const encoded = encodeURIComponent(query);
+        storeMapFrame.src = `https://maps.google.com/maps?q=${encoded}&z=17&output=embed`;
+        openInMapsBtn.href = originalUrl || `https://www.google.com/maps/search/?api=1&query=${encoded}`;
+        mapCurrentLabel.textContent = `📍 Showing: ${label}`;
+        mapCurrentLabel.title = label;
+    }
+
+    function getShopTitle(el) {
+        const li = el.closest('li');
+        const title = li ? li.querySelector('.shop-title') : null;
+        return title ? title.textContent.trim() : '';
+    }
+
+    function getBranchLabel(el) {
+        const branchItem = el.closest('.branch-item');
+        if (branchItem) {
+            const strong = branchItem.querySelector('strong');
+            if (strong) return strong.textContent.trim();
+        }
+        return '';
+    }
+
+    function highlightActiveShop(triggerEl) {
+        document.querySelectorAll('.shop-list li.map-active').forEach(li => {
+            li.classList.remove('map-active');
+        });
+        const li = triggerEl.closest('.shop-list > li');
+        if (li) li.classList.add('map-active');
+    }
+
+    document.querySelectorAll('aside .map-link, aside .shop-list .map-icon').forEach(link => {
+        link.addEventListener('click', (e) => {
+            if (e.ctrlKey || e.metaKey || e.shiftKey || e.button === 1) return;
+            const query = extractMapQuery(link.href);
+            if (!query) return;
+            e.preventDefault();
+            const shopName = getShopTitle(link);
+            const branchName = getBranchLabel(link);
+            const label = [shopName, branchName].filter(Boolean).join(' — ') || query;
+            showOnEmbeddedMap(query, label, link.href);
+            highlightActiveShop(link);
+            mapContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+    });
 
     // --- SIDEBAR SHOP SEARCH SCRIPT ---
     const searchInput = document.getElementById('shop-search');
