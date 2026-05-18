@@ -23,75 +23,106 @@
             line-height: 1.6;
         }
         
-        /* --- AUTHENTICATION OVERLAY --- */
-        #verification-overlay {
+        /* --- APP LOCK GATE ---
+           The main app is wrapped in #app. When body.locked is present,
+           #app is removed from layout entirely (display:none) so no zoom,
+           scroll, or scaling trick can reveal it. The auth screen is its
+           own full-page surface, not an overlay on top of content. */
+        html, body {
+            height: 100%;
+        }
+        body.locked {
+            overflow: hidden !important;
+            height: 100vh !important;
+            background-color: var(--bg-dark);
+        }
+        body.locked #app {
+            display: none !important;
+            visibility: hidden !important;
+        }
+        body:not(.locked) #auth-screen {
+            display: none !important;
+        }
+        body.no-js #auth-screen {
+            display: none !important;
+        }
+        body.no-js .noscript-message {
+            display: flex !important;
+        }
+        .noscript-message {
+            display: none;
             position: fixed;
-            top: 0;
-            left: 0;
+            inset: 0;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            z-index: 1000000;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 30px;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+        .noscript-message strong {
+            color: var(--primary-color);
+            display: block;
+            font-size: 1.4em;
+            margin-bottom: 10px;
+        }
+
+        /* --- AUTH SCREEN (full-page, not an overlay) --- */
+        #auth-screen {
+            position: fixed;
+            inset: 0;
             width: 100vw;
             height: 100vh;
-            background-color: rgba(26, 26, 26, 0.98);
-            z-index: 9999;
+            background:
+                radial-gradient(ellipse at top, rgba(212, 175, 55, 0.08), transparent 60%),
+                radial-gradient(ellipse at bottom, rgba(74, 144, 226, 0.05), transparent 60%),
+                var(--bg-dark);
+            z-index: 99999;
             display: flex;
             justify-content: center;
             align-items: center;
-            backdrop-filter: blur(8px);
+            padding: 20px;
+            box-sizing: border-box;
+            overflow: auto;
+            -webkit-overflow-scrolling: touch;
         }
-        .verify-box {
+        .auth-card {
             background-color: var(--bg-light);
-            padding: 32px 28px;
-            border-radius: 8px;
+            padding: 36px 30px;
+            border-radius: 10px;
             border-top: 5px solid var(--primary-color);
-            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
             text-align: center;
-            max-width: 360px;
-            width: 92%;
+            max-width: 380px;
+            width: 100%;
+            box-sizing: border-box;
+            margin: auto;
         }
-        .verify-box h2 {
-            margin: 0 0 4px 0;
+        .auth-brand {
+            margin-bottom: 24px;
+        }
+        .auth-logo {
+            font-size: 3em;
+            display: block;
+            line-height: 1;
+            margin-bottom: 6px;
+        }
+        .auth-title {
+            margin: 0;
             color: var(--primary-color);
-            letter-spacing: 1px;
+            letter-spacing: 2px;
+            font-size: 1.5em;
         }
-        .verify-box .verify-subtitle {
+        .auth-tagline {
             color: var(--text-muted);
             font-size: 0.85em;
-            margin: 0 0 18px 0;
+            margin: 6px 0 0 0;
+            letter-spacing: 0.5px;
         }
-        .verify-tabs {
-            display: flex;
-            gap: 6px;
-            background: #111;
-            border-radius: 6px;
-            padding: 4px;
-            margin-bottom: 18px;
-        }
-        .verify-tab {
-            flex: 1;
-            padding: 8px 6px;
-            background: transparent;
-            color: var(--text-muted);
-            border: none;
-            border-radius: 4px;
-            font-size: 0.9em;
-            cursor: pointer;
-            font-family: inherit;
-            transition: background 0.2s, color 0.2s;
-        }
-        .verify-tab:hover {
-            color: #fff;
-        }
-        .verify-tab.active {
-            background-color: var(--primary-color);
-            color: #000;
-            font-weight: bold;
-        }
-        .verify-method {
-            display: none;
-        }
-        .verify-method.active {
-            display: block;
-        }
-        .verify-help {
+        .auth-help {
             color: #ccc;
             font-size: 0.9em;
             margin: 0 0 14px 0;
@@ -99,8 +130,8 @@
         .pin-display {
             display: flex;
             justify-content: center;
-            gap: 14px;
-            margin: 16px 0 20px 0;
+            gap: 16px;
+            margin: 18px 0 22px 0;
         }
         .pin-dot {
             width: 14px;
@@ -126,25 +157,26 @@
         .pin-pad {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            margin-bottom: 12px;
+            gap: 10px;
+            margin-bottom: 14px;
         }
         .pin-key {
-            padding: 14px 0;
+            padding: 16px 0;
             background-color: #111;
             color: #fff;
             border: 1px solid #444;
-            border-radius: 6px;
-            font-size: 1.3em;
+            border-radius: 8px;
+            font-size: 1.4em;
             font-weight: bold;
             cursor: pointer;
             font-family: inherit;
-            transition: background 0.15s, transform 0.05s;
+            transition: background 0.15s, border-color 0.15s, transform 0.05s;
             -webkit-user-select: none;
             user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
         .pin-key:hover:not(:disabled) {
-            background-color: #222;
+            background-color: #1f1f1f;
             border-color: var(--primary-color);
         }
         .pin-key:active:not(:disabled) {
@@ -153,48 +185,30 @@
             color: #000;
         }
         .pin-key:disabled {
-            opacity: 0.4;
+            opacity: 0.35;
             cursor: not-allowed;
         }
         .pin-key.pin-fn {
-            font-size: 0.9em;
-            color: var(--text-muted);
-        }
-        #google-signin-btn {
-            display: flex;
-            justify-content: center;
-            min-height: 44px;
-            margin: 12px 0;
-        }
-        .google-not-configured {
-            color: var(--text-muted);
             font-size: 0.85em;
-            background: #111;
-            border: 1px dashed #444;
-            border-radius: 6px;
-            padding: 14px;
-            line-height: 1.5;
+            color: var(--text-muted);
         }
-        .google-not-configured code {
-            background: #000;
-            padding: 1px 5px;
-            border-radius: 3px;
-            color: var(--primary-color);
-            font-size: 0.9em;
-        }
-        .verify-error {
-            color: #ff4d4d;
+        .pin-error {
+            color: #ff6b6b;
             font-size: 0.85em;
             margin: 6px 0 0 0;
-            min-height: 1.2em;
+            min-height: 1.4em;
+            text-align: center;
         }
-        .verify-hint {
+        .auth-hint {
             color: var(--text-muted);
-            font-size: 0.75em;
-            margin-top: 12px;
-            padding-top: 10px;
+            font-size: 0.72em;
+            margin-top: 18px;
+            padding-top: 12px;
             border-top: 1px dashed #444;
             line-height: 1.5;
+        }
+        .auth-hint strong {
+            color: var(--primary-color);
         }
 
         /* --- AUTH STATUS BAR (post-login) --- */
@@ -681,55 +695,58 @@
         }
     </style>
 </head>
-<body>
+<body class="locked no-js">
 
-<div id="verification-overlay">
-    <div class="verify-box">
-        <h2>Authentication</h2>
-        <p class="verify-subtitle">Choose a sign-in method</p>
+<noscript>
+    <div class="noscript-message" style="display:flex !important;">
+        <div>
+            <strong>JavaScript Required</strong>
+            This site needs JavaScript to verify access.<br>
+            Please enable it in your browser settings.
+        </div>
+    </div>
+</noscript>
 
-        <div class="verify-tabs" role="tablist">
-            <button class="verify-tab active" data-method="pin" type="button">🔢 PIN Code</button>
-            <button class="verify-tab" data-method="google" type="button">🔐 Google</button>
+<div id="auth-screen" role="dialog" aria-modal="true" aria-labelledby="auth-title">
+    <div class="auth-card">
+        <div class="auth-brand">
+            <span class="auth-logo" aria-hidden="true">🥃</span>
+            <h1 id="auth-title" class="auth-title">FLY'S WHISKY HUB</h1>
+            <p class="auth-tagline">Members-only access</p>
         </div>
 
-        <div id="verify-pin" class="verify-method active">
-            <p class="verify-help">Enter your 4-digit PIN</p>
-            <div class="pin-display" id="pin-display">
-                <span class="pin-dot"></span>
-                <span class="pin-dot"></span>
-                <span class="pin-dot"></span>
-                <span class="pin-dot"></span>
-            </div>
-            <div class="pin-pad">
-                <button class="pin-key" data-key="1" type="button">1</button>
-                <button class="pin-key" data-key="2" type="button">2</button>
-                <button class="pin-key" data-key="3" type="button">3</button>
-                <button class="pin-key" data-key="4" type="button">4</button>
-                <button class="pin-key" data-key="5" type="button">5</button>
-                <button class="pin-key" data-key="6" type="button">6</button>
-                <button class="pin-key" data-key="7" type="button">7</button>
-                <button class="pin-key" data-key="8" type="button">8</button>
-                <button class="pin-key" data-key="9" type="button">9</button>
-                <button class="pin-key pin-fn" data-key="CLR" type="button">CLR</button>
-                <button class="pin-key" data-key="0" type="button">0</button>
-                <button class="pin-key pin-fn" data-key="DEL" type="button">⌫</button>
-            </div>
-            <p id="pin-error" class="verify-error"></p>
+        <p class="auth-help">Enter your 4-digit PIN</p>
+        <div class="pin-display" id="pin-display" aria-label="PIN entry">
+            <span class="pin-dot"></span>
+            <span class="pin-dot"></span>
+            <span class="pin-dot"></span>
+            <span class="pin-dot"></span>
         </div>
 
-        <div id="verify-google" class="verify-method">
-            <p class="verify-help">Sign in with your Google account</p>
-            <div id="google-signin-btn"></div>
-            <p id="google-error" class="verify-error"></p>
+        <div class="pin-pad" role="group" aria-label="PIN keypad">
+            <button class="pin-key" data-key="1" type="button" aria-label="1">1</button>
+            <button class="pin-key" data-key="2" type="button" aria-label="2">2</button>
+            <button class="pin-key" data-key="3" type="button" aria-label="3">3</button>
+            <button class="pin-key" data-key="4" type="button" aria-label="4">4</button>
+            <button class="pin-key" data-key="5" type="button" aria-label="5">5</button>
+            <button class="pin-key" data-key="6" type="button" aria-label="6">6</button>
+            <button class="pin-key" data-key="7" type="button" aria-label="7">7</button>
+            <button class="pin-key" data-key="8" type="button" aria-label="8">8</button>
+            <button class="pin-key" data-key="9" type="button" aria-label="9">9</button>
+            <button class="pin-key pin-fn" data-key="CLR" type="button" aria-label="Clear">CLR</button>
+            <button class="pin-key" data-key="0" type="button" aria-label="0">0</button>
+            <button class="pin-key pin-fn" data-key="DEL" type="button" aria-label="Delete">⌫</button>
         </div>
 
-        <p class="verify-hint">
+        <p id="pin-error" class="pin-error" role="alert" aria-live="polite"></p>
+
+        <p class="auth-hint">
             Demo PINs · <strong>Admin</strong>: 1234 · <strong>VIP</strong>: 8888 · <strong>Guest</strong>: 0000
         </p>
     </div>
 </div>
 
+<div id="app">
 <header>
     <h1>🥃 FLY'S WHISKY HUB</h1>
     <p>Store locations & Distilleries</p>
@@ -1109,10 +1126,15 @@
 <footer>
     <p>© 2026 Fly's Whisky Hub. Please drink responsibly.</p>
 </footer>
+</div><!-- /#app -->
 
 <script>
     // --- AUTHENTICATION MODULE ---
-    // Edit this config to change PINs, allowed emails, or enable Google Sign-In.
+    // The page loads with <body class="locked">. The #app element is hidden
+    // by CSS using `display: none !important` while that class is present,
+    // so no zoom/scroll/scaling trick can reveal main content. Only this
+    // script can remove the lock, and only after a correct PIN.
+    //
     // To generate a new PIN hash, run in the browser console:
     //   crypto.subtle.digest('SHA-256', new TextEncoder().encode('YOUR_PIN'))
     //     .then(b => console.log([...new Uint8Array(b)].map(x => x.toString(16).padStart(2,'0')).join('')))
@@ -1128,16 +1150,7 @@
         },
         MAX_ATTEMPTS: 5,
         LOCKOUT_MINUTES: 5,
-        SESSION_DAYS: 7,
-        // To enable Google Sign-In:
-        //  1. Create an OAuth 2.0 Client ID at https://console.cloud.google.com/apis/credentials
-        //  2. Add your site's origin to "Authorized JavaScript origins"
-        //  3. Paste the Client ID below
-        GOOGLE_CLIENT_ID: '',
-        // Allowed Google emails (empty = allow ANY Google account). Use lowercase.
-        GOOGLE_ALLOWED_EMAILS: [],
-        // Emails that get admin tier on Google sign-in (lowercase). Others default to vip.
-        GOOGLE_ADMIN_EMAILS: []
+        SESSION_DAYS: 7
     };
 
     const TIER_LEVELS = { guest: 1, vip: 2, admin: 3 };
@@ -1147,17 +1160,18 @@
         lockout: 'whisky_auth_lockout_until'
     };
 
-    const verifyOverlay = document.getElementById('verification-overlay');
+    // Flip the no-js marker as soon as JS runs (CSS uses it to show a
+    // noscript message if JS is disabled).
+    document.body.classList.remove('no-js');
+
+    const authScreen = document.getElementById('auth-screen');
     const pinDisplay = document.getElementById('pin-display');
     const pinDots = pinDisplay.querySelectorAll('.pin-dot');
     const pinError = document.getElementById('pin-error');
-    const googleError = document.getElementById('google-error');
     const authStatus = document.getElementById('auth-status');
     const tierBadge = document.getElementById('tier-badge');
     const lockedNotice = document.getElementById('tier-locked-notice');
     const lockedText = document.getElementById('tier-locked-text');
-
-    document.body.style.overflow = 'hidden';
 
     async function sha256Hex(str) {
         const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
@@ -1233,12 +1247,15 @@
         authStatus.style.display = '';
     }
 
+    function unlockApp() {
+        document.body.classList.remove('locked');
+    }
+
     function grantAccess(tier, method) {
         setSession(tier, method);
         clearFailures();
         applyTierGating(tier);
-        verifyOverlay.style.display = 'none';
-        document.body.style.overflow = '';
+        unlockApp();
     }
 
     function signOut() {
@@ -1335,101 +1352,27 @@
     });
 
     document.addEventListener('keydown', e => {
-        if (verifyOverlay.style.display === 'none') return;
-        const pinTab = document.getElementById('verify-pin');
-        if (!pinTab.classList.contains('active')) return;
+        if (!document.body.classList.contains('locked')) return;
         if (/^[0-9]$/.test(e.key)) { appendPin(e.key); e.preventDefault(); }
         else if (e.key === 'Backspace') { backspacePin(); e.preventDefault(); }
         else if (e.key === 'Escape') { clearPin(); e.preventDefault(); }
     });
-
-    // --- TAB SWITCHING ---
-    document.querySelectorAll('.verify-tab').forEach(tab => {
-        tab.addEventListener('click', () => {
-            document.querySelectorAll('.verify-tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.verify-method').forEach(m => m.classList.remove('active'));
-            tab.classList.add('active');
-            document.getElementById('verify-' + tab.dataset.method).classList.add('active');
-        });
-    });
-
-    // --- GOOGLE SIGN-IN ---
-    function parseJwtPayload(token) {
-        try {
-            const part = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
-            const json = decodeURIComponent(atob(part).split('').map(c =>
-                '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
-            ).join(''));
-            return JSON.parse(json);
-        } catch (_) { return null; }
-    }
-
-    window.handleGoogleCredential = function(response) {
-        const payload = parseJwtPayload(response.credential);
-        if (!payload || !payload.email) {
-            googleError.textContent = 'Invalid response from Google.';
-            return;
-        }
-        const email = payload.email.toLowerCase();
-        const allowed = AUTH_CONFIG.GOOGLE_ALLOWED_EMAILS;
-        if (allowed.length > 0 && !allowed.includes(email)) {
-            googleError.textContent = `${email} is not authorised for this site.`;
-            return;
-        }
-        const tier = AUTH_CONFIG.GOOGLE_ADMIN_EMAILS.includes(email) ? 'admin' : 'vip';
-        grantAccess(tier, 'google:' + email);
-    };
-
-    function initGoogleSignIn() {
-        const target = document.getElementById('google-signin-btn');
-        if (!AUTH_CONFIG.GOOGLE_CLIENT_ID) {
-            target.innerHTML =
-                '<div class="google-not-configured">' +
-                'Google Sign-In is not configured.<br>' +
-                'Set <code>AUTH_CONFIG.GOOGLE_CLIENT_ID</code> in the page script to enable.' +
-                '</div>';
-            return;
-        }
-        const s = document.createElement('script');
-        s.src = 'https://accounts.google.com/gsi/client';
-        s.async = true;
-        s.defer = true;
-        s.onload = () => {
-            try {
-                google.accounts.id.initialize({
-                    client_id: AUTH_CONFIG.GOOGLE_CLIENT_ID,
-                    callback: window.handleGoogleCredential,
-                    auto_select: false
-                });
-                google.accounts.id.renderButton(target, {
-                    theme: 'filled_black',
-                    size: 'large',
-                    shape: 'rectangular',
-                    text: 'signin_with',
-                    width: 260
-                });
-            } catch (err) {
-                target.innerHTML = '<div class="google-not-configured">Failed to load Google Sign-In.</div>';
-            }
-        };
-        s.onerror = () => {
-            target.innerHTML = '<div class="google-not-configured">Could not reach Google. Check your network.</div>';
-        };
-        document.head.appendChild(s);
-    }
 
     // --- BOOTSTRAP ---
     (function init() {
         const session = getSession();
         if (session) {
             applyTierGating(session.tier);
-            verifyOverlay.style.display = 'none';
-            document.body.style.overflow = '';
+            unlockApp();
             return;
         }
         renderPinDots();
         refreshLockoutUI();
-        initGoogleSignIn();
+        // Focus inside the auth screen for keyboard input
+        setTimeout(() => {
+            const firstKey = document.querySelector('.pin-key');
+            if (firstKey) firstKey.focus({ preventScroll: true });
+        }, 50);
     })();
 
     // --- JS DATABASE: SCOTLAND DISTILLERIES (NEVER TRUNCATED!) ---
