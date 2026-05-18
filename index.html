@@ -692,6 +692,33 @@
             .container {
                 flex-direction: column;
             }
+            header {
+                padding: 16px 12px 20px;
+            }
+            header h1 {
+                font-size: 1.6em;
+                letter-spacing: 1px;
+                line-height: 1.2;
+                word-break: keep-all;
+            }
+            header p {
+                font-size: 0.95em;
+                margin: 6px 0 0;
+            }
+            /* Move the tier badge / sign-out out of the absolute corner so
+               it no longer overlaps the wrapped title on narrow screens. */
+            .auth-status {
+                position: static;
+                justify-content: center;
+                margin: 0 auto 12px;
+                width: fit-content;
+            }
+        }
+        @media (max-width: 380px) {
+            header h1 {
+                font-size: 1.35em;
+                letter-spacing: 0.5px;
+            }
         }
     </style>
 </head>
